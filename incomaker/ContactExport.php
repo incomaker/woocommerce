@@ -19,6 +19,10 @@
 
 namespace Incomaker;
 
+use SimpleXMLElement;
+use WC_Customer;
+use WP_User;
+
 class ContactExport extends XmlExport
 {
 
@@ -26,7 +30,7 @@ class ContactExport extends XmlExport
 
     public function __construct()
     {
-        $this->xml = new \SimpleXMLElement('<contacts/>');
+        $this->xml = new SimpleXMLElement('<contacts/>');
         $this->setLimitKey('number');
     }
 
@@ -46,11 +50,11 @@ class ContactExport extends XmlExport
         if (!empty(trim($value))) $this->addItem($childXml, $key, $value);
     }
 
-    protected function createXml(\WP_User $customer)
+    protected function createXml(WP_User $customer)
     {
 
         $metaData = get_user_meta($customer->ID);
-        $custom = new \WC_Customer($customer->ID);
+        $custom = new WC_Customer($customer->ID);
 
         if (isset($custom) && !empty($custom->get_billing_email())) {
 

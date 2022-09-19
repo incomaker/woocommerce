@@ -19,6 +19,8 @@
 
 namespace Incomaker;
 
+use SimpleXMLElement;
+
 class ProductExport extends XmlExport
 {
 
@@ -28,7 +30,7 @@ class ProductExport extends XmlExport
 
     public function __construct()
     {
-        $this->xml = new \SimpleXMLElement('<products/>');
+        $this->xml = new SimpleXMLElement('<products/>');
         $this->locale = get_locale();
         $this->setLimitKey('limit');
     }

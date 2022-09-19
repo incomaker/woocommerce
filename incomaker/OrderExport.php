@@ -19,6 +19,9 @@
 
 namespace Incomaker;
 
+use SimpleXMLElement;
+use WC_Product;
+
 class OrderExport extends XmlExport
 {
 
@@ -27,7 +30,7 @@ class OrderExport extends XmlExport
     public function __construct()
     {
 
-        $this->xml = new \SimpleXMLElement('<orders/>');
+        $this->xml = new SimpleXMLElement('<orders/>');
         $this->setLimitKey('limit');
     }
 
@@ -73,7 +76,7 @@ class OrderExport extends XmlExport
                 $this->addItem($item, "variantId", $itm->get_product_id() * XmlExport::PRODUCT_ATTRIBUTE + $itm->get_variation_id());     //TODO Deprecated: will be removed in next version
                 $this->addItem($item, "quantity", $itm->get_quantity());
                 $product = $itm->get_product();
-                if ($product instanceof \WC_Product) {
+                if ($product instanceof WC_Product) {
                     $price = $this->addItem($item, "price", $product->get_price());
                     $price->addAttribute("currency", $order->get_currency());
                 } else {

@@ -1,0 +1,59 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "46fd5f82dbd3f9ddca459fe300ae252e",
+    "packages": [
+        {
+            "name": "incomaker/api",
+            "version": "2.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/incomaker/api.git",
+                "reference": "46189be0cae213457fdae3b48505979ebee00858"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/incomaker/api/zipball/46189be0cae213457fdae3b48505979ebee00858",
+                "reference": "46189be0cae213457fdae3b48505979ebee00858",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Incomaker\\Api\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Incomaker",
+                    "email": "support@incomaker.com"
+                }
+            ],
+            "description": "Incomaker API library",
+            "support": {
+                "issues": "https://github.com/incomaker/api/issues",
+                "source": "https://github.com/incomaker/api/tree/2.3.1"
+            },
+            "time": "2022-09-17T16:24:12+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

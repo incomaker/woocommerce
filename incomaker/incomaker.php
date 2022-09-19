@@ -3,7 +3,7 @@
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 0.8.7
+Version: 1.0.0
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -11,7 +11,7 @@ License: GPL v3
 
 /*
  * Incomaker for Woocommerce
- * Copyright (C) 2021 Incomaker s.r.o.
+ * Copyright (C) 2021-2022 Incomaker s.r.o.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ License: GPL v3
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 use Incomaker\Options;
 use Incomaker\Tracking;
@@ -77,15 +76,35 @@ class Incomaker
     {
         ?>
         <div class="error notice">
-            <p><?php
-                _e('This plugin requires WooCommerce. Please install and activate it first.', 'incomaker'); ?></p>
+            <p><?php _e('This plugin requires WooCommerce. Please install and activate it first.', 'incomaker'); ?></p>
         </div>
         <?php
     }
 
+    public function register_rest_controller() {
+        $controller = new Incomaker\Feed();
+        $controller->registerRoutes();
+    }
+
+
+    function feed_handler( $served, $result, $request, $server ) {
+
+        if ( '/'.\Incomaker\Feed::ROUTE.\Incomaker\Feed::COMMAND !== $request->get_route() ||
+            'execute' !== $request->get_attributes()['callback'][1] )
+            return $served;
+
+        $server->send_header( 'Content-Type', 'application/xml; Charset=UTF-8' );
+
+        echo $result->get_data();
+
+        exit;
+    }
+
     public function execute()
     {
-
+        if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+            require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+        }
         if (version_compare(PHP_VERSION, MIN_PHP_VERSION) < 0) {
             add_action('admin_notices', array($this, 'php_upgrade_notice'));
         } elseif (!in_array('woocommerce/woocommerce.php', (array)get_option('active_plugins', array()), true)) {
@@ -99,9 +118,10 @@ class Incomaker
             Events::getInstance();
             register_activation_hook(__FILE__, 'incomaker_activate');
             register_deactivation_hook(__FILE__, 'incomaker_deactivate');
+            add_action( 'rest_api_init', array($this, 'register_rest_controller' ));
+            add_filter( 'rest_pre_serve_request', array($this, 'feed_handler' ), 10, 4);
         }
     }
-
 }
 
 (new Incomaker())->execute();

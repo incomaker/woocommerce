@@ -24,7 +24,7 @@ abstract class XmlExport
 
     const PRODUCT_ATTRIBUTE = 100000;
     const MAX_LIMIT = 1000;
-    const API_VERSION = "2.9.3";
+    const API_VERSION = "2.10";
 
     public static $name;
 

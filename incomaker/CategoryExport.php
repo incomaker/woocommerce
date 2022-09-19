@@ -19,6 +19,8 @@
 
 namespace Incomaker;
 
+use SimpleXMLElement;
+
 class CategoryExport extends XmlExport
 {
 
@@ -28,7 +30,7 @@ class CategoryExport extends XmlExport
 
     public function __construct()
     {
-        $this->xml = new \SimpleXMLElement('<categories/>');
+        $this->xml = new SimpleXMLElement('<categories/>');
         $this->locale = get_locale();
         $this->setLimitKey('number');
     }

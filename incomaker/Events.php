@@ -1,7 +1,7 @@
 <?php
 /*
  * Incomaker for Woocommerce
- * Copyright (C) 2021 Incomaker s.r.o.
+ * Copyright (C) 2021-2022 Incomaker s.r.o.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,20 +21,87 @@ namespace Incomaker;
 
 class Events implements Singletonable
 {
+    private $incomakerApi;
+
     public function __construct()
     {
-        add_action('user_register', array($this, 'incomaker_user_register', 10, 1));
-        add_action('wp_login', array($this, 'incomaker_user_login', 10, 2));
+        $this->incomakerApi = new IncomakerApi();
+
+        add_action('user_register', array($this, 'incomaker_user_register'));
+        add_action('wp_login', array($this, 'incomaker_user_login'));
+        add_action('wp_logout', array($this, 'incomaker_user_logout'));
+        add_filter('profile_update', array($this, 'incomaker_profile_update'), 10, 2);
+        add_action('woocommerce_add_to_cart', array($this, 'incomaker_add_to_cart'), 10, 6);
+        add_filter('woocommerce_cart_item_removed', array($this, 'incomaker_add_to_cart'), 10, 6);
+        add_action('woocommerce_checkout_order_processed', array($this, 'incomaker_order_add'));
+    }
+
+    public function incomaker_order_add($order_id) {
+
+        $order = new \WC_Order( $order_id );
+
+        $this->incomakerApi->postOrderEvent('order_add', $order->get_user_id(), $order->get_order_item_totals()
+            , $order->get_user_id());
+
+        $this->sessionStart();
+        WC()->session->__unset('old_cart');
+    }
+
+    protected function sessionStart() {
+        if ( isset(WC()->session) && ! WC()->session->has_session() ) {
+            WC()->session->set_customer_session_cookie( true );
+        }
+    }
+
+    public function incomaker_add_to_cart() {
+
+        $this->sessionStart();
+        $customer_id = get_current_user_id();
+        $new = array();
+
+        foreach (WC()->cart->get_cart() as $item => $values) {
+            $_product = $values['data'];
+            $new[] = $_product->get_id() * XmlExport::PRODUCT_ATTRIBUTE;
+        }
+
+        $old = unserialize(WC()->session->get( 'old_cart' ));
+
+        if (empty($old)) $old = array();
+        $diff = array_diff($new, $old);
+
+        if (!empty($diff)) {
+            $this->incomakerApi->postProductEvent('cart_add', $customer_id, current($diff), $customer_id);
+        } else {
+            $diff = array_diff($old, $new);
+            if (!empty($diff)) {
+                $this->incomakerApi->postProductEvent('cart_remove', $customer_id, current($diff), $customer_id);
+            }
+        }
+        WC()->session->set( 'old_cart', serialize($new));
+
+    }
+
+    public function incomaker_profile_update($user_id, $old_user_data) {
+
+        $customer = new \WC_Customer( $user_id );
+        $this->incomakerApi->updateContact($user_id, $customer);
+        $this->incomakerApi->postEvent("contact_update", $user_id);
     }
 
     public function incomaker_user_register($user_id)
     {
-
+        $this->incomakerApi->addContact($user_id, $_POST['email']);
+        $this->incomakerApi->postEvent("register", $user_id);
     }
 
-    public function incomaker_user_login($user_id)
+    public function incomaker_user_login($user)
     {
+        $this->incomakerApi->postEvent("login", get_userdatabylogin($user)->ID);
+    }
 
+    public function incomaker_user_logout($user_id)
+    {
+        $this->incomakerApi->postEvent("logout", $user_id);
     }
 
     private static $singleton = null;

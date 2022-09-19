@@ -19,8 +19,8 @@
 
 namespace Incomaker;
 
-require_once('../../../wp-load.php');
-require_once(plugin_dir_path('incomaker') . '/vendor/autoload.php');
+use BadFunctionCallException;
+use Exception;
 
 class Feed
 {
@@ -33,44 +33,73 @@ class Feed
         $this->manager = new ExportManager();
     }
 
-    public function execute()
+    const ROUTE = 'incomaker/v210';
+    const COMMAND = '/feed';
+
+    public function registerRoutes()
     {
+        register_rest_route(Feed::ROUTE, Feed::COMMAND, array(
+            array(
+                'methods' => array('GET'),
+                'callback' => array($this, 'execute'),
+                'args' => array(
+                    'id' => array(
+                        'validate_callback' => function ($param, $request, $key) {
+                            return !empty($param);
+                        }),
+                    'limit' => array(
+                        'validate_callback' => function ($param, $request, $key) {
+                            return is_numeric($param);
+                        }),
+                    'offset' => array(
+                        'validate_callback' => function ($param, $request, $key) {
+                            return is_numeric($param);
+                        }),
+                    'downloadCount' => array(
+                        'validate_callback' => function ($param, $request, $key) {
+                            return is_numeric($param);
+                        }),
+                    'since' => array(
+                        'validate_callback' => function ($param, $request, $key) {
+                            if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])( (0[0-9]|[1-2][0-4]):(0[0-9]|[1-5][0-9]):(0[0-9]|[1-5][0-9]))?$/",$param)) {
+                                return true;
+                            }
+                        }),
+                )
+            )
+        ));
+    }
+
+    function execute(\WP_REST_Request $request){
+
         try {
             $xmlExport = $this->manager->getExport($_GET["type"]);
-            if ($xmlExport == NULL) throw new \BadFunctionCallException();
-        } catch (\Exception $e) {
+            if ($xmlExport == NULL) throw new BadFunctionCallException();
+        } catch (Exception $e) {
             header('HTTP/1.0 400 Bad Request');
-            echo "400-1 Invalid command";
-            return;
+            return "400-1 Invalid command";
         }
 
-        if (!isset($_GET["key"]) || get_option("incomaker_option")['api_key'] != $_GET["key"]) {
+        if (!isset($request["key"]) || get_option("incomaker_option")['api_key'] != $request["key"]) {
             header('HTTP/1.0 401 Unauthorized');
-            echo "401-2 Invalid API key";
-            return;
+            return "401-2 Invalid API key";
         }
 
         try {
-            $xmlExport->setLimit(isset($_GET["limit"]) ? $_GET["limit"] : NULL);
-            $xmlExport->setOffset(isset($_GET["offset"]) ? $_GET["offset"] : NULL);
-            $xmlExport->setId(isset($_GET["id"]) ? $_GET["id"] : NULL);
-            $xmlExport->setSince(isset($_GET["since"]) ? $_GET["since"] : NULL);    //TODO Since date format check
+            $xmlExport->setLimit(isset($request["limit"]) ? $request["limit"] : NULL);
+            $xmlExport->setOffset(isset($_GET["offset"]) ? $request["offset"] : NULL);
+            $xmlExport->setId(isset($request["id"]) ? $request["id"] : NULL);
+            $xmlExport->setSince(isset($request["since"]) ? $request["since"] : NULL);
         } catch (InvalidArgumentException $e) {
             header('HTTP/1.0 400 Bad Request');
-            echo "400-2 " . $e->getMessage();
-            return;
+            return "400-2 " . $e->getMessage();
         }
 
-        header("Content-Type: application/xml; Charset=UTF-8");
-
         try {
-            echo $xmlExport->createXmlFeed();
+            return $xmlExport->createXmlFeed();
         } catch (Exception $e) {
             header('HTTP/1.0 510 Not extended');
-            echo "510-1 " . $e->getMessage();
-            return;
+            return "510-1 " . $e->getMessage();
         }
     }
 }
-
-(new Feed())->execute();

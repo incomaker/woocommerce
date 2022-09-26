@@ -19,6 +19,8 @@
 
 namespace Incomaker;
 
+require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+
 class Events implements Singletonable
 {
     private $incomakerApi;
@@ -33,15 +35,19 @@ class Events implements Singletonable
         add_filter('profile_update', array($this, 'incomaker_profile_update'), 10, 2);
         add_action('woocommerce_add_to_cart', array($this, 'incomaker_add_to_cart'), 10, 6);
         add_filter('woocommerce_cart_item_removed', array($this, 'incomaker_add_to_cart'), 10, 6);
-        add_action('woocommerce_checkout_order_processed', array($this, 'incomaker_order_add'));
+        add_action('woocommerce_checkout_order_processed', array($this, 'incomaker_order_add'), 10, 1);
+
+        add_action( 'post_event', array($this, 'incomaker_async_post_event' ), 10, 2);
+        add_action( 'register', array($this, 'incomaker_async_register' ), 10, 2);
+        add_action( 'update', array($this, 'incomaker_async_update' ), 10, 2);
+        add_action( 'post_product_event', array($this, 'incomaker_async_post_product_event' ), 10, 4);
     }
 
     public function incomaker_order_add($order_id) {
 
         $order = new \WC_Order( $order_id );
 
-        $this->incomakerApi->postOrderEvent('order_add', $order->get_user_id(), $order->get_order_item_totals()
-            , $order->get_user_id());
+        as_enqueue_async_action( 'post_product_event', array('order_add', $order->get_user_id(), $order->get_order_item_totals(), $order->get_user_id()));
 
         $this->sessionStart();
         WC()->session->__unset('old_cart');
@@ -53,8 +59,8 @@ class Events implements Singletonable
         }
     }
 
-    public function incomaker_add_to_cart() {
-
+    public function incomaker_add_to_cart()
+    {
         $this->sessionStart();
         $customer_id = get_current_user_id();
         $new = array();
@@ -70,18 +76,21 @@ class Events implements Singletonable
         $diff = array_diff($new, $old);
 
         if (!empty($diff)) {
-            $this->incomakerApi->postProductEvent('cart_add', $customer_id, current($diff), $customer_id);
+            as_enqueue_async_action( 'post_product_event', array('cart_add', $customer_id, current($diff), $customer_id));
         } else {
             $diff = array_diff($old, $new);
             if (!empty($diff)) {
-                $this->incomakerApi->postProductEvent('cart_remove', $customer_id, current($diff), $customer_id);
+                as_enqueue_async_action( 'post_product_event', array('cart_remove', $customer_id, current($diff), $customer_id));
             }
         }
         WC()->session->set( 'old_cart', serialize($new));
-
     }
 
-    public function incomaker_profile_update($user_id, $old_user_data) {
+    public function incomaker_profile_update($user_id, $customer) {
+        as_enqueue_async_action( 'update', array($user_id, $customer));
+    }
+
+    public function incomaker_async_update($user_id, $customer) {
 
         $customer = new \WC_Customer( $user_id );
         $this->incomakerApi->updateContact($user_id, $customer);
@@ -90,18 +99,33 @@ class Events implements Singletonable
 
     public function incomaker_user_register($user_id)
     {
-        $this->incomakerApi->addContact($user_id, $_POST['email']);
+        as_enqueue_async_action( 'register', array($user_id, $_POST['email']));
+    }
+
+    public function incomaker_async_register($user_id, $email) {
+
+        $this->incomakerApi->addContact($user_id, $email);
         $this->incomakerApi->postEvent("register", $user_id);
     }
 
     public function incomaker_user_login($user)
     {
-        $this->incomakerApi->postEvent("login", get_userdatabylogin($user)->ID);
+        as_enqueue_async_action( 'post_event', array("login", get_userdatabylogin($user)->ID));
+    }
+
+    public function incomaker_async_post_event($event, $param) {
+
+        $this->incomakerApi->postEvent($event, $param);
+    }
+
+    public function incomaker_async_post_product_event($event, $customer_id, $product, $campaign_id) {
+
+        $this->incomakerApi->postProductEvent($event, $customer_id, $product, $campaign_id);
     }
 
     public function incomaker_user_logout($user_id)
     {
-        $this->incomakerApi->postEvent("logout", $user_id);
+        as_enqueue_async_action( 'post_event', array("logout", $user_id ));
     }
 
     private static $singleton = null;

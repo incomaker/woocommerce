@@ -42,54 +42,30 @@ class Feed
             array(
                 'methods' => array('GET'),
                 'callback' => array($this, 'execute'),
-                'args' => array(
-                    'id' => array(
-                        'validate_callback' => function ($param, $request, $key) {
-                            return !empty($param);
-                        }),
-                    'limit' => array(
-                        'validate_callback' => function ($param, $request, $key) {
-                            return is_numeric($param);
-                        }),
-                    'offset' => array(
-                        'validate_callback' => function ($param, $request, $key) {
-                            return is_numeric($param);
-                        }),
-                    'downloadCount' => array(
-                        'validate_callback' => function ($param, $request, $key) {
-                            return is_numeric($param);
-                        }),
-                    'since' => array(
-                        'validate_callback' => function ($param, $request, $key) {
-                            if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])( (0[0-9]|[1-2][0-4]):(0[0-9]|[1-5][0-9]):(0[0-9]|[1-5][0-9]))?$/",$param)) {
-                                return true;
-                            }
-                        }),
                 )
             )
-        ));
+        );
     }
 
     function execute(\WP_REST_Request $request){
 
         try {
-            $xmlExport = $this->manager->getExport($_GET["type"]);
+            $xmlExport = $this->manager->getExport($request->get_param('type'));
             if ($xmlExport == NULL) throw new BadFunctionCallException();
         } catch (Exception $e) {
             header('HTTP/1.0 400 Bad Request');
             return "400-1 Invalid command";
         }
-
-        if (!isset($request["key"]) || get_option("incomaker_option")['api_key'] != $request["key"]) {
+        if (get_option("incomaker_option")['api_key'] !== $request->get_param('key')) {
             header('HTTP/1.0 401 Unauthorized');
             return "401-2 Invalid API key";
         }
 
         try {
-            $xmlExport->setLimit(isset($request["limit"]) ? $request["limit"] : NULL);
-            $xmlExport->setOffset(isset($_GET["offset"]) ? $request["offset"] : NULL);
-            $xmlExport->setId(isset($request["id"]) ? $request["id"] : NULL);
-            $xmlExport->setSince(isset($request["since"]) ? $request["since"] : NULL);
+            $xmlExport->setLimit($request->get_param('limit'));     //TODO verify limit and offset parameters, how they work
+            $xmlExport->setOffset($request->get_param('offset'));
+            $xmlExport->setId($request->get_param('id'));
+            $xmlExport->setSince($request->get_param('since'));
         } catch (InvalidArgumentException $e) {
             header('HTTP/1.0 400 Bad Request');
             return "400-2 " . $e->getMessage();

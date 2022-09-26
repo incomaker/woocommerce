@@ -31,6 +31,8 @@ use Incomaker\Options;
 use Incomaker\Tracking;
 use Incomaker\Events;
 
+require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -86,7 +88,6 @@ class Incomaker
         $controller->registerRoutes();
     }
 
-
     function feed_handler( $served, $result, $request, $server ) {
 
         if ( '/'.\Incomaker\Feed::ROUTE.\Incomaker\Feed::COMMAND !== $request->get_route() ||
@@ -107,7 +108,9 @@ class Incomaker
         }
         if (version_compare(PHP_VERSION, MIN_PHP_VERSION) < 0) {
             add_action('admin_notices', array($this, 'php_upgrade_notice'));
-        } elseif (!in_array('woocommerce/woocommerce.php', (array)get_option('active_plugins', array()), true)) {
+        } elseif (!in_array('incomaker/incomaker.php', (array)get_option('active_plugins', array()), true)
+            && ! is_plugin_active_for_network('incomaker/incomaker.php')) {
+
             add_action('admin_notices', array($this, 'woocommerce_not_active'));
         } else {
             load_plugin_textdomain('incomaker', false, dirname(plugin_basename(__FILE__)) . '/languages');

@@ -1,7 +1,7 @@
 <?php
 /*
  * Incomaker for Woocommerce
- * Copyright (C) 2021 Incomaker s.r.o.
+ * Copyright (C) 2021-2022 Incomaker s.r.o.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

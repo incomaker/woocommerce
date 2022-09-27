@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'incomaker/woocommerce',
+        'pretty_version' => '0.8.6',
+        'version' => '0.8.6.0',
+        'reference' => NULL,
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'incomaker/api' => array(
+            'pretty_version' => '2.3.1',
+            'version' => '2.3.1.0',
+            'reference' => '46189be0cae213457fdae3b48505979ebee00858',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../incomaker/api',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'incomaker/woocommerce' => array(
+            'pretty_version' => '0.8.6',
+            'version' => '0.8.6.0',
+            'reference' => NULL,
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'woocommerce/action-scheduler' => array(
+            'pretty_version' => '3.5.2',
+            'version' => '3.5.2.0',
+            'reference' => '519cfa20db89eb85511cad08301d3fa33522ed8b',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../woocommerce/action-scheduler',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

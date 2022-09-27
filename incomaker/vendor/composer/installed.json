@@ -1,1 +1,92 @@
-[]
+{
+    "packages": [
+        {
+            "name": "incomaker/api",
+            "version": "2.3.1",
+            "version_normalized": "2.3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/incomaker/api.git",
+                "reference": "46189be0cae213457fdae3b48505979ebee00858"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/incomaker/api/zipball/46189be0cae213457fdae3b48505979ebee00858",
+                "reference": "46189be0cae213457fdae3b48505979ebee00858",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*"
+            },
+            "time": "2022-09-17T16:24:12+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Incomaker\\Api\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Incomaker",
+                    "email": "support@incomaker.com"
+                }
+            ],
+            "description": "Incomaker API library",
+            "support": {
+                "issues": "https://github.com/incomaker/api/issues",
+                "source": "https://github.com/incomaker/api/tree/2.3.1"
+            },
+            "install-path": "../incomaker/api"
+        },
+        {
+            "name": "woocommerce/action-scheduler",
+            "version": "3.5.2",
+            "version_normalized": "3.5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/woocommerce/action-scheduler.git",
+                "reference": "519cfa20db89eb85511cad08301d3fa33522ed8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/519cfa20db89eb85511cad08301d3fa33522ed8b",
+                "reference": "519cfa20db89eb85511cad08301d3fa33522ed8b",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5",
+                "woocommerce/woocommerce-sniffs": "0.1.0",
+                "wp-cli/wp-cli": "~2.5.0",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "time": "2022-09-16T15:31:00+00:00",
+            "type": "wordpress-plugin",
+            "extra": {
+                "scripts-description": {
+                    "test": "Run unit tests",
+                    "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
+                    "phpcbf": "Fix coding standards warnings/errors automatically with PHP Code Beautifier"
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "description": "Action Scheduler for WordPress and WooCommerce",
+            "homepage": "https://actionscheduler.org/",
+            "support": {
+                "issues": "https://github.com/woocommerce/action-scheduler/issues",
+                "source": "https://github.com/woocommerce/action-scheduler/tree/3.5.2"
+            },
+            "install-path": "../woocommerce/action-scheduler"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

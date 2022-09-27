@@ -62,7 +62,7 @@ class Feed
         }
 
         try {
-            $xmlExport->setLimit($request->get_param('limit'));     //TODO verify limit and offset parameters, how they work
+            $xmlExport->setLimit($request->get_param('limit'));
             $xmlExport->setOffset($request->get_param('offset'));
             $xmlExport->setId($request->get_param('id'));
             $xmlExport->setSince($request->get_param('since'));

@@ -71,7 +71,7 @@ class IncomakerApi
         if (isset($customer)) {
             $event->setClientContactId($customer);
         }
-        $event->setCampaignId($this->getCampaignId());  //TODO remove passing campaignId this way
+        $event->setCampaignId($this->getCampaignId());
         $event->addCustomField("total", $total);
         if (!empty($session)) {
             $event->setSessionId($session);

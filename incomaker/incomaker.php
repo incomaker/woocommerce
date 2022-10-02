@@ -3,7 +3,7 @@
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 1.0.2
+Version: 1.0.3
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3

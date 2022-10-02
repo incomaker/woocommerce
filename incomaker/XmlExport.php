@@ -125,7 +125,8 @@ abstract class XmlExport
         foreach ($this->getFilteredItems() as $item) {
             $this->createXml($item);
         }
-        return $this->xml->asXML();
+
+        return apply_filters("incomaker_output_xml_feed_filter",$this->xml->asXML(), $this::$name);
     }
 
     protected $limitIdentifier = 'number';

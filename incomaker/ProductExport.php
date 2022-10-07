@@ -92,6 +92,8 @@ class ProductExport extends XmlExport
             $aXml->addAttribute("id", $attrId);
         }
         $this->addItem($childXml, 'productId', $product->get_id());
+
+        do_action( 'incomaker_modify_xml_product_item', $this, $childXml, $product );
     }
 
     protected function getItemsCount()

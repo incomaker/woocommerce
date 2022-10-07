@@ -85,5 +85,7 @@ class OrderExport extends XmlExport
                 }
             }
         }
+
+        do_action( 'incomaker_modify_xml_order_item', $this, $childXml, $order );
     }
 }

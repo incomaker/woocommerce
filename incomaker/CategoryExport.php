@@ -55,5 +55,8 @@ class CategoryExport extends XmlExport
         $lXml->addAttribute("id", $this->shortLang($this->locale));
         $this->addItem($lXml, "name", $category->name);
         $this->addItem($lXml, "url", get_permalink(get_page_by_path($category->slug)));
+
+        do_action( 'incomaker_modify_xml_category_item', $this, $childXml, $category );
+
     }
 }

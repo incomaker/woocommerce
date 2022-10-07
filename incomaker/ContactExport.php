@@ -53,7 +53,6 @@ class ContactExport extends XmlExport
     protected function createXml(WP_User $customer)
     {
 
-        $metaData = get_user_meta($customer->ID);
         $custom = new WC_Customer($customer->ID);
 
         if (isset($custom) && !empty($custom->get_billing_email())) {
@@ -71,6 +70,8 @@ class ContactExport extends XmlExport
             $this->addIfNotEmpty($custom, $childXml, 'country', strtolower($custom->get_billing_country()));
             $this->addIfNotEmpty($custom, $childXml, 'companyName', htmlspecialchars($custom->get_billing_company()));
             $this->addItem($childXml, 'consentTitle', 'Woocommerce');
+
+            do_action( 'incomaker_modify_xml_contact_item', $this, $childXml, $custom );
         }
     }
 }

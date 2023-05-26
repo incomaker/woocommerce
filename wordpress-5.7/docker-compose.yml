@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mariadb:10.6.4-focal
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306
+      - 33060
+  wordpress-57:
+    image: wordpress:5.7.2-php8.0-apache
+    volumes:
+      - ../incomaker:/var/www/html/wp-content/plugins/incomaker
+      - ./woocommerce:/var/www/html/wp-content/plugins/woocommerce
+      - ./wp-config.php:/var/www/html/wp-config.php
+    ports:
+      - 80:80
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+      - WORDPRESS_USERNAME=admin
+      - WORDPRESS_PASSWORD=password

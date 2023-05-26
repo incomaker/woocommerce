@@ -51,7 +51,7 @@ class OrderExport extends XmlExport
 
         $childXml = $this->xml->addChild('o');
         $childXml->addAttribute("id", $order->get_order_number());
-        if ($order->get_customer_id() == 0) {
+        if (($order->get_customer_id() == 0) || (is_multisite())) {
             $contact = $childXml->addChild('contact');
             $this->addItem($contact, 'firstName', htmlspecialchars($order->get_billing_first_name()));
             $this->addItem($contact, 'lastName', htmlspecialchars($order->get_billing_last_name()));
@@ -61,7 +61,10 @@ class OrderExport extends XmlExport
             $this->addItem($contact, 'zipCode', $order->get_billing_postcode());
             $this->addItem($contact, 'phoneNumber1', $order->get_billing_phone());
             $this->addItem($contact, 'country', strtolower($order->get_billing_country()));
-            $this->addItem($contact, 'language', $this->shortLang(get_user_locale($order->get_customer_id())));
+            $userLocale = $this->getUserLocale($order->get_customer_id());
+            if (!empty($userLocale)) {
+                $this->addItem($contact, 'language', $this->shortLang($userLocale));
+            }
         } else {
             $this->addItem($childXml, 'contactId', $order->get_customer_id());
         }

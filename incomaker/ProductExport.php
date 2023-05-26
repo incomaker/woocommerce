@@ -76,9 +76,9 @@ class ProductExport extends XmlExport
         $languagesXml = $childXml->addChild('languages');
         $lXml = $languagesXml->addChild('l');
         $lXml->addAttribute("id", $this->shortLang($this->locale));
-        $this->addItem($lXml, "name", $product->get_name());
-        $this->addItem($lXml, "description", $product->get_description());
-        $this->addItem($lXml, "shortDescription", $product->get_short_description());
+        $this->addItem($lXml, "name", self::removeXmlInvalidChars($product->get_name()));
+        $this->addItem($lXml, "description", self::removeXmlInvalidChars($product->get_description()));
+        $this->addItem($lXml, "shortDescription", self::removeXmlInvalidChars($product->get_short_description()));
         $this->addItem($lXml, 'url', get_permalink($product->get_id()));
 
         $attributesXml = $childXml->addChild('attributes');

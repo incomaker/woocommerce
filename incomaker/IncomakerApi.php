@@ -1,21 +1,4 @@
 <?php
-/*
- * Incomaker for Woocommerce
- * Copyright (C) 2021-2022 Incomaker s.r.o.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 namespace Incomaker;
 
@@ -26,10 +9,10 @@ class IncomakerApi
     private $incomaker;
     private $contactController;
     private $eventController;
+    private $pluginController;
 
-    public function __construct() {
-
-        $this->incomaker = new \Incomaker\Api\Connector(new IncomakerDriver());
+    public function __construct($apiKey = null) {
+        $this->incomaker = new \Incomaker\Api\Connector(new IncomakerDriver($apiKey));
     }
 
     public function getPermId()
@@ -38,12 +21,31 @@ class IncomakerApi
         if (isset($_COOKIE["incomaker_p"])) {
             return $_COOKIE["incomaker_p"];
         }
-        return $_COOKIE["permId"];
+        if (isset($_COOKIE["permId"])) {
+            return $_COOKIE["permId"];
+        }
+        return "";
     }
 
-    public function postProductEvent($event, $customer, $product, $session) {
+    public function getCampaignId() {
+        if (isset($_COOKIE["incomaker_c"])) {
+            return $_COOKIE["incomaker_c"];
+        } else {
+            return "";
+        }
+    }
 
-        $event = new \Incomaker\Api\Data\Event($event, $this->getPermId());
+    public function getSessionId()
+    {
+        if (isset($_COOKIE["inco_session_temp_browser"])) {
+            return $_COOKIE["inco_session_temp_browser"];
+        }
+        return "";
+    }
+
+    public function postProductEvent($event, $customer, $product, $session, $permId) {
+
+        $event = new \Incomaker\Api\Data\Event($event, $permId);
 
         if (isset($customer)) {
             $event->setClientContactId($customer);
@@ -60,12 +62,15 @@ class IncomakerApi
         $this->eventController->addEvent($event);
     }
 
-    public function postEvent($event, $customer)
+    public function postEvent($event, $customer, $permId, $email = null)
     {
-        $event = new \Incomaker\Api\Data\Event($event, $this->getPermId());
+        $event = new \Incomaker\Api\Data\Event($event, $permId);
 
         if (isset($customer)) {
             $event->setClientContactId($customer);
+        }
+        if (isset($email)) {
+            $event->setEmail($email);
         }
         if (!isset($this->eventController)) {
             $this->eventController = $this->incomaker->createEventController();
@@ -73,23 +78,17 @@ class IncomakerApi
         $this->eventController->addEvent($event);
     }
 
-    public function getCampaignId() {
-        if (isset($_COOKIE["incomaker_c"])) {
-            return $_COOKIE["incomaker_c"];
-        } else {
-            return "";
-        }
-    }
-
-    public function postOrderEvent($event, $customer, $total, $session)
+    public function postOrderEvent($event, $customer, $order_id, $session, $permId, $email = null)
     {
-        $event = new \Incomaker\Api\Data\Event($event, $this->getPermId());
+        $event = new \Incomaker\Api\Data\Event($event, $permId);
 
         if (isset($customer)) {
             $event->setClientContactId($customer);
         }
-        $event->setCampaignId($this->getCampaignId());
-        $event->addCustomField("total", $total);
+        if (isset($email)) {
+            $event->setEmail($email);
+        }
+        $event->setRelatedId($order_id);
         if (!empty($session)) {
             $event->setSessionId($session);
         }
@@ -99,13 +98,13 @@ class IncomakerApi
         $this->eventController->addEvent($event);
     }
 
-    public function updateContact($user_id, $customer) {
+    public function updateContact($user_id, $customer, $permId) {
 
         if (!isset($this->contactController)) {
             $this->contactController = $this->incomaker->createContactController();
         }
         $contact = new \Incomaker\Api\Data\Contact($user_id);
-        $contact->setPermId($this->getPermId());
+        $contact->setPermId($permId);
 
         $contact->setFirstName($customer->get_billing_first_name() != "" ? $customer->get_billing_first_name() : $customer->get_first_name());
         $contact->setLastName($customer->get_billing_last_name() != "" ? $customer->get_billing_last_name() : $customer->get_last_name());
@@ -121,18 +120,34 @@ class IncomakerApi
 
     }
 
-
-    public function addContact($user_id, $email)
+    public function addContact($contact, $permId)
     {
-
         if (!isset($this->contactController)) {
             $this->contactController = $this->incomaker->createContactController();
         }
-        $contact = new \Incomaker\Api\Data\Contact($user_id);
-        $contact->setPermId($this->getPermId());
-        $contact->setEmail($email);
+        $contact->setPermId($permId);
+        return $this->contactController->addContact($contact);
 
-        $this->contactController->addContact($contact);
+    }
 
+    /**
+     * @return Api\Controller\PluginController
+     */
+    private function getPluginController() {
+        if (!isset($this->pluginController)) {
+            $this->pluginController = $this->incomaker->createPluginController();
+        }
+        return $this->pluginController;
+    }
+
+    /**
+     * Load Account and Plugin UUIDs for current API key.
+     *
+     * @return Object { accountUuid; pluginUuid; }
+     */
+    public function getPluginInfo() {
+        return $this
+            ->getPluginController()
+            ->getInfo();
     }
 }

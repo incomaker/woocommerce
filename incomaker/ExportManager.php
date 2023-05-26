@@ -29,6 +29,7 @@ class ExportManager
         $this->addExport(new CategoryExport());
         $this->addExport(new ProductExport());
         $this->addExport(new OrderExport());
+        $this->addExport(new CouponExport());
     }
 
     protected function addExport(XmlExport $export)

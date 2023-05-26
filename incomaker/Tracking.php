@@ -1,7 +1,7 @@
 <?php
 /*
  * Incomaker for Woocommerce
- * Copyright (C) 2021-2022 Incomaker s.r.o.
+ * Copyright (C) 2021-2023 Incomaker s.r.o.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,9 @@ class Tracking implements Singletonable
     public function incomaker_js_register()
     {
         $opts = get_option("incomaker_option");
-        wp_enqueue_script('incomaker', 'https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=' . $opts["account_id"] . '&pluginUuid=' . $opts["plugin_id"] . '#asyncload');
+        if (isset($opts["account_id"]) && isset($opts["plugin_id"])) {
+            wp_enqueue_script('incomaker', 'https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=' . $opts["account_id"] . '&pluginUuid=' . $opts["plugin_id"] . '#asyncload');
+        }
     }
 
     public function add_async_forscript($url)

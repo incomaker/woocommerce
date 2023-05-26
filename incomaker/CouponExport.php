@@ -20,8 +20,6 @@
 namespace Incomaker;
 
 use SimpleXMLElement;
-use WC_Customer;
-use WP_User;
 
 class CouponExport extends XmlExport
 {
@@ -31,13 +29,26 @@ class CouponExport extends XmlExport
     public function __construct()
     {
         $this->xml = new SimpleXMLElement('<coupons/>');
-        $this->setLimitKey('number');
     }
 
     protected function getItemsCount()
     {
-        $users = count_users();
-        return $users["total_users"];
+        $posts = get_posts( array(
+            'posts_per_page'   => -1,
+            'orderby'          => 'name',
+            'order'            => 'asc',
+            'post_type'        => 'shop_coupon',
+            'post_status'      => 'publish',
+        ) );
+
+        foreach ($posts as $post) {
+            $coupon = new \WC_Coupon($post->ID);
+            if (($coupon->get_usage_count() < $coupon->get_usage_limit()) || ($coupon->get_usage_limit() == 0)) {
+                echo $coupon->get_id()." ".$coupon->get_code()." - ".$coupon->get_description()." ".$coupon->get_usage_count()."/".$coupon->get_usage_limit()."\n";
+            }
+        }
+        die();
+        return $coupons;
     }
 
     public function getFilteredItems()

@@ -42,9 +42,14 @@ class Options implements Singletonable
         );
     }
 
-    public function getVal()
+    public function valExists($key)
     {
-        return $this->incomaker_options;
+        return !empty($this->incomaker_options[$key]);
+    }
+
+    public function getVal($key, $default = '')
+    {
+        return $this->valExists($key) ? esc_attr($this->incomaker_options[$key]) : $default;
     }
 
     public function incomaker_create_admin_page()
@@ -94,7 +99,10 @@ class Options implements Singletonable
             'API Key', // title
             array($this, 'api_key_callback'), // callback
             'incomaker-admin', // page
-            'incomaker_setting_section' // section
+            'incomaker_setting_section', // section
+            [
+                'label_for' => 'api_key'
+            ]
         );
 
         add_settings_field(
@@ -116,17 +124,24 @@ class Options implements Singletonable
 
     public function incomaker_sanitize($input)
     {
+        $keyOld = $this->getVal('api_key');
+
         $sanitary_values = array();
         if (isset($input['api_key'])) {
             $sanitary_values['api_key'] = sanitize_text_field($input['api_key']);
         }
 
-        if (isset($input['account_id'])) {
-            $sanitary_values['account_id'] = sanitize_text_field($input['account_id']);
-        }
+        $keyNew = $sanitary_values['api_key'];
+        $valuesSet = $this->valExists('account_id') && $this->valExists('plugin_id');
 
-        if (isset($input['plugin_id'])) {
-            $sanitary_values['plugin_id'] = sanitize_text_field($input['plugin_id']);
+        if (empty($keyNew)) {
+            $sanitary_values['account_id'] = '';
+            $sanitary_values['plugin_id'] = '';
+        } else if (($keyOld != $keyNew) || !$valuesSet) {
+            $incomakerApi = new IncomakerApi($keyNew);
+            $info = $incomakerApi->getPluginInfo();
+            $sanitary_values['account_id'] = $info->accountUuid;
+            $sanitary_values['plugin_id'] = $info->pluginUuid;
         }
 
         return $sanitary_values;
@@ -139,26 +154,30 @@ class Options implements Singletonable
 
     public function api_key_callback()
     {
-        printf(
-            '<input class="regular-text" type="text" name="incomaker_option[api_key]" id="api_key" value="%s">',
-            isset($this->incomaker_options['api_key']) ? esc_attr($this->incomaker_options['api_key']) : ''
-        );
+        $value = isset($this->incomaker_options['api_key']) ? esc_attr($this->incomaker_options['api_key']) : '';
+
+        ?>
+            <input class="regular-text" type="text" name="incomaker_option[api_key]" id="api_key" value="<?=$value?>">
+            <p>When proper API Key is set, data from your e-shop will be shared with Incomaker.</p>
+            <p>You will get your API Key in <a target="_blank" href="https://my.incomaker.com/admin/plugin_profile.xhtml">Eshop Info</a> section of your account at <strong>incomaker.com</strong>.</p>
+            <p>By filling your Incomaker API Key you agree to our <a href="https://www.incomaker.com/en/terms-and-conditions">Terms & Conditions</a>.</p>
+        <?php
     }
 
     public function account_id_callback()
     {
         printf(
-            '<input class="regular-text" type="text" name="incomaker_option[account_id]" id="account_id" value="%s">',
+            '<input class="regular-text" type="text" name="incomaker_option[account_id]" id="account_id" value="%s" disabled>',
             isset($this->incomaker_options['account_id']) ? esc_attr($this->incomaker_options['account_id']) : ''
         );
     }
 
     public function plugin_id_callback()
     {
-        printf(
-            '<input class="regular-text" type="text" name="incomaker_option[plugin_id]" id="plugin_id" value="%s">',
-            isset($this->incomaker_options['plugin_id']) ? esc_attr($this->incomaker_options['plugin_id']) : ''
-        );
+        $value = $this->getVal('plugin_id');
+        ?>
+            <input class="regular-text" type="text" name="incomaker_option[plugin_id]" id="plugin_id" value="<?=$value?>" disabled>
+        <?php
     }
 
     private static $singleton = null;

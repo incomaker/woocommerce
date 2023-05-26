@@ -36,6 +36,15 @@ abstract class XmlExport
     protected $id;
     protected $since;
 
+    /**
+     * Strips characters that are invalid for encoding into XML entities.
+     * @param $text
+     * @return string
+     */
+    public static function removeXmlInvalidChars($text) {
+        return preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', $text);
+    }
+
     public function setApiKey($apiKey)
     {
         if (!isset($apiKey)) {
@@ -138,6 +147,15 @@ abstract class XmlExport
 
     protected function shortLang($str) {
         return substr($str,0,2);
+    }
+
+    public function getUserLocale($user) {
+
+        $user_object = get_user_by( 'id', $user );
+        if (!empty($user_object)) {
+            $locale = $user_object->locale;
+        }
+        return $locale;
     }
 
     protected function getQuery()

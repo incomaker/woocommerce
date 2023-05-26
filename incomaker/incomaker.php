@@ -3,7 +3,7 @@
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 1.0.4
+Version: 2.0.1
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -11,7 +11,7 @@ License: GPL v3
 
 /*
  * Incomaker for Woocommerce
- * Copyright (C) 2021-2022 Incomaker s.r.o.
+ * Copyright (C) 2021-2023 Incomaker s.r.o.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

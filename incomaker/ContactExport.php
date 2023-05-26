@@ -42,7 +42,11 @@ class ContactExport extends XmlExport
 
     public function getFilteredItems()
     {
-        return get_users($this->getQuery());
+        if (is_multisite()) {
+            return array();
+        } else {
+            return get_users($this->getQuery());
+        }
     }
 
     protected function addIfNotEmpty($customer, $childXml, $key, $value)
@@ -59,7 +63,11 @@ class ContactExport extends XmlExport
 
             $childXml = $this->xml->addChild('c');
             $childXml->addAttribute("id", $customer->data->ID);
-            $this->addItem($childXml, 'language', $this->shortLang(get_user_locale($customer->data->ID)));
+
+            $userLocale = $this->getUserLocale($customer->data->ID);
+            if (!empty($userLocale)) {
+               $this->addItem($childXml, 'language', $this->shortLang($userLocale));
+            }
             $this->addIfNotEmpty($custom, $childXml, 'firstName', htmlspecialchars($custom->get_billing_first_name()));
             $this->addIfNotEmpty($custom, $childXml, 'lastName', htmlspecialchars($custom->get_billing_last_name()));
             $this->addIfNotEmpty($custom, $childXml, 'email', htmlspecialchars($custom->get_billing_email()));

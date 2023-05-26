@@ -1,6 +1,6 @@
 {
   "name": "incomaker/woocommerce",
-  "version": "0.8.6",
+  "version": "2.0.0",
   "description": "Marketing automation with artificial intelligence",
   "minimum-stability": "stable",
   "license": "proprietary",
@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "incomaker/api": "^2.1",
+    "incomaker/api": "^3.0",
     "woocommerce/action-scheduler": "^3.1.6"
   },
   "autoload": {

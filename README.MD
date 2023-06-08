@@ -18,7 +18,8 @@ Finally activate Incomaker plugin which is already listed in available plugins.
 
 Now you have fresh WordPress installation with WooCommerce and Incomaker, happy debugging.
 
-Fresh WordPress installation is now running on `http://localhost`.
+Fresh WordPress installation is now running on `http://localhost`. Admin console is on `http://localhost/wp-admin` 
+and e-shop on `http://localhost/shop` 
 
 ### Wordpress v. 5.7
 

@@ -2,7 +2,7 @@ services:
   db:
     image: mariadb:10.6.4-focal
     command: '--default-authentication-plugin=mysql_native_password'
-    restart: always
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=somewordpress
       - MYSQL_DATABASE=wordpress
@@ -19,7 +19,7 @@ services:
       - ./wp-config.php:/var/www/html/wp-config.php
     ports:
       - 80:80
-    restart: always
+    restart: unless-stopped
     environment:
       - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_USER=wordpress

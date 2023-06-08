@@ -21,6 +21,8 @@ namespace Incomaker;
 
 require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
+const EVENT_GROUP_NAME = 'incomaker-sync-events';
+
 class Events implements Singletonable
 {
     private $incomakerApi;
@@ -60,7 +62,10 @@ class Events implements Singletonable
                 $this->incomakerApi->getSessionId(),
                 $this->incomakerApi->getPermId(),
                 $order->get_billing_email()
-            )
+            ),
+			EVENT_GROUP_NAME,
+			false,
+			6
         );
 
         $this->sessionStart();
@@ -92,18 +97,36 @@ class Events implements Singletonable
         $diff = array_diff($new, $old);
 
         if (!empty($diff)) {
-            as_enqueue_async_action( 'post_product_event', array('cart_add', $customer_id, current($diff), $this->incomakerApi->getSessionId(), $this->incomakerApi->getPermId()));
+            as_enqueue_async_action(
+				'post_product_event',
+				array('cart_add', $customer_id, current($diff), $this->incomakerApi->getSessionId(), $this->incomakerApi->getPermId()),
+				EVENT_GROUP_NAME,
+				false,
+				4
+			);
         } else {
             $diff = array_diff($old, $new);
             if (!empty($diff)) {
-                as_enqueue_async_action( 'post_product_event', array('cart_remove', $customer_id, current($diff), $this->incomakerApi->getSessionId(), $this->incomakerApi->getPermId()));
+                as_enqueue_async_action(
+					'post_product_event',
+					array('cart_remove', $customer_id, current($diff), $this->incomakerApi->getSessionId(), $this->incomakerApi->getPermId()),
+					EVENT_GROUP_NAME,
+					false,
+					5
+				);
             }
         }
         WC()->session->set( 'old_cart', serialize($new));
     }
 
     public function incomaker_profile_update($user_id, $customer) {
-        as_enqueue_async_action('update', array($user_id, $customer, $this->incomakerApi->getPermId()));
+        as_enqueue_async_action(
+			'update',
+			array($user_id, $customer, $this->incomakerApi->getPermId()),
+			EVENT_GROUP_NAME,
+			false,
+			8
+		);
     }
 
     public function incomaker_async_update($user_id, $customer, $permId) {
@@ -125,7 +148,13 @@ class Events implements Singletonable
         $contact->setZipCode(isset($_POST['billing_postcode']) ? strval($_POST['billing_postcode']) : null);
         $contact->setPhoneNumber1(isset($_POST['billing_phone']) ? strval($_POST['billing_phone']) : null);
 
-        as_enqueue_async_action( 'register', array(serialize($contact), $this->incomakerApi->getPermId()));
+        as_enqueue_async_action(
+			'register',
+			array(serialize($contact), $this->incomakerApi->getPermId()),
+			EVENT_GROUP_NAME,
+			false,
+			1
+		);
     }
 
     public function incomaker_async_register($contact, $permId) {
@@ -136,7 +165,13 @@ class Events implements Singletonable
     }
 
     public function incomaker_user_login($user) {
-        as_enqueue_async_action( 'post_event', array("login", get_userdatabylogin($user)->ID, $this->incomakerApi->getPermId()));
+        as_enqueue_async_action(
+			'post_event',
+			array("login", get_userdatabylogin($user)->ID, $this->incomakerApi->getPermId()),
+			EVENT_GROUP_NAME,
+			false,
+			2
+		);
     }
 
     public function incomaker_async_post_event($event, $param, $permId) {
@@ -152,7 +187,13 @@ class Events implements Singletonable
     }
 
     public function incomaker_user_logout($user_id) {
-        as_enqueue_async_action( 'post_event', array("logout", $user_id, $this->incomakerApi->getPermId() ));
+        as_enqueue_async_action(
+			'post_event',
+			array("logout", $user_id, $this->incomakerApi->getPermId()),
+			EVENT_GROUP_NAME,
+			false,
+			15
+		);
     }
 
     private static $singleton = null;

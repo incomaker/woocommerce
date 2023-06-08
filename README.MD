@@ -51,4 +51,6 @@ There is separate archive for each version and also archive called `incomaker.zi
 
 ### For Wordpress Marketplace
 
-TBD
+We have account on `wordpress.org` registered with email `incomakermarketing@gmail.com`.
+
+Currently we are waiting for plugin approval.

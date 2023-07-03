@@ -71,7 +71,7 @@ class ProductExport extends XmlExport
         $this->addItem($childXml, 'stock', $product->get_stock_quantity());
         $this->addItem($childXml, 'choiceFlag', $product->get_featured() ? 1 : 0);
         $this->addItem($childXml, 'active', ($product->get_status() == "publish" ? 1 : 0));
-        $this->addItem($childXml, 'updated', $product->get_date_modified()->date("c"));
+        $this->addItem($childXml, 'updated', $product->get_date_modified());
 
         $languagesXml = $childXml->addChild('languages');
         $lXml = $languagesXml->addChild('l');

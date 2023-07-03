@@ -69,14 +69,13 @@ class OrderExport extends XmlExport
             $this->addItem($childXml, 'contactId', $order->get_customer_id());
         }
 
-        $this->addItem($childXml, 'created', $order->get_date_created()->date("c"));
+        $this->addItem($childXml, 'created', $order->get_date_created());
         $this->addItem($childXml, 'state', $order->get_status());
         $items = $childXml->addChild('items');
         if ($order->get_items() != null) {
             foreach ($order->get_items() as $itm) {
                 $item = $items->addChild('i');
                 $item->addAttribute("id", $itm->get_product_id() * XmlExport::PRODUCT_ATTRIBUTE + $itm->get_variation_id());
-                $this->addItem($item, "variantId", $itm->get_product_id() * XmlExport::PRODUCT_ATTRIBUTE + $itm->get_variation_id());     //TODO Deprecated: will be removed in next version
                 $this->addItem($item, "quantity", $itm->get_quantity());
                 $product = $itm->get_product();
                 if ($product instanceof WC_Product) {

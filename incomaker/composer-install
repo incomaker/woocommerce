@@ -1,1 +1,1 @@
-sudo docker run --rm --interactive --tty --volume $PWD:/app composer composer install
+docker run --rm --interactive --tty --volume $PWD:/app composer composer install

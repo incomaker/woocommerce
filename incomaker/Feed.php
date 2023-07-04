@@ -54,12 +54,14 @@ class Feed
 			$xmlExport = $this->manager->getExport($request->get_param('type'));
 			if ($xmlExport == NULL) throw new BadFunctionCallException();
 		} catch (Exception $e) {
-			header('HTTP/1.0 400 Bad Request');
-			return "400-1 Invalid command";
+			return new \WP_Error("UNKNOWNTYPE", "Unknown feed type! Use URL query to specify feed type (product, contact, category, order or coupon).", array('status' => 400));
 		}
-		if (get_option("incomaker_option")['api_key'] !== $request->get_param('key')) {
-			header('HTTP/1.0 401 Unauthorized');
-			return "401-2 Invalid API key";
+		$apiKey = get_option("incomaker_option")['api_key'];
+		if (strlen($apiKey) === 0) {
+			return new \WP_Error("APIKEYNOTSET", "API key not set! Incomaker API key must be configured on plugin Settings page.", array('status' => 403));
+		}
+		if ($apiKey !== $request->get_param('key')) {
+			return new \WP_Error("APIKEYINVALID", "Invalid API key! Valid Incomaker API key must be configured on plugin Settings page.", array('status' => 401));
 		}
 
 		try {
@@ -68,15 +70,13 @@ class Feed
 			$xmlExport->setId($request->get_param('id'));
 			$xmlExport->setSince($request->get_param('since'));
 		} catch (InvalidArgumentException $e) {
-			header('HTTP/1.0 400 Bad Request');
-			return "400-2 " . $e->getMessage();
+			return new \WP_Error("ERROR", $e->getMessage(), array('status' => 400));
 		}
 
 		try {
 			return $xmlExport->createXmlFeed();
 		} catch (Exception $e) {
-			header('HTTP/1.0 510 Not extended');
-			return "510-1 " . $e->getMessage();
+			return new \WP_Error("ERROR", $e->getMessage(), array('status' => 500));
 		}
 	}
 }

@@ -185,14 +185,14 @@ class Events implements Singletonable
 		$this->incomakerApi->postEvent($event, $param, $permId);
 	}
 
-	public function incomaker_async_post_product_event($event, $customer_id, $product, $campaign_id, $permId)
+	public function incomaker_async_post_product_event($event, $customer_id, $product, $sessionId, $permId)
 	{
-		$this->incomakerApi->postProductEvent($event, $customer_id, $product, $campaign_id, $permId);
+		$this->incomakerApi->postProductEvent($event, $customer_id, $product, $sessionId, $permId);
 	}
 
-	public function incomaker_async_post_order_event($event, $customer_id, $order_id, $campaign_id, $permId, $contactEmail)
+	public function incomaker_async_post_order_event($event, $customer_id, $order_id, $sessionId, $permId, $contactEmail)
 	{
-		$this->incomakerApi->postOrderEvent($event, $customer_id, $order_id, $campaign_id, $permId, $contactEmail);
+		$this->incomakerApi->postOrderEvent($event, $customer_id, $order_id, $sessionId, $permId, $contactEmail);
 	}
 
 	public function incomaker_user_logout($user_id)

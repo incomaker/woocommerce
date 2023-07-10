@@ -24,64 +24,37 @@ use SimpleXMLElement;
 class CouponExport extends XmlExport
 {
 
-    public static $name = "coupon";
+	public static $name = "coupon";
 
-    public function __construct()
-    {
-        $this->xml = new SimpleXMLElement('<coupons/>');
-    }
+	public function __construct()
+	{
+		$this->xml = new SimpleXMLElement('<coupons/>');
+		$this->setLimitKey('numberposts');
+	}
 
-    protected function getItemsCount()
-    {
-        $posts = get_posts( array(
-            'posts_per_page'   => -1,
-            'orderby'          => 'name',
-            'order'            => 'asc',
-            'post_type'        => 'shop_coupon',
-            'post_status'      => 'publish',
-        ) );
+	protected function getItemsCount()
+	{
+		$count = wp_count_posts('shop_coupon');
+		return $count->publish;
+	}
 
-        foreach ($posts as $post) {
-            $coupon = new \WC_Coupon($post->ID);
-            if (($coupon->get_usage_count() < $coupon->get_usage_limit()) || ($coupon->get_usage_limit() == 0)) {
-                echo $coupon->get_id()." ".$coupon->get_code()." - ".$coupon->get_description()." ".$coupon->get_usage_count()."/".$coupon->get_usage_limit()."\n";
-            }
-        }
-        die();
-        return $coupons;
-    }
+	public function getFilteredItems()
+	{
+		$query = $this->getQuery();
+		$query['post_type'] = 'shop_coupon';
+		return get_posts($query);
+	}
 
-    public function getFilteredItems()
-    {
-        return get_users($this->getQuery());
-    }
-
-    protected function addIfNotEmpty($customer, $childXml, $key, $value)
-    {
-        if (!empty(trim($value))) $this->addItem($childXml, $key, $value);
-    }
-
-    protected function createXml(WP_User $customer)
-    {
-
-        $metaData = get_user_meta($customer->ID);
-        $custom = new WC_Customer($customer->ID);
-
-        if (isset($custom) && !empty($custom->get_billing_email())) {
-
-            $childXml = $this->xml->addChild('c');
-            $childXml->addAttribute("id", $customer->data->ID);
-            $this->addItem($childXml, 'language', $this->shortLang(get_user_locale($customer->data->ID)));
-            $this->addIfNotEmpty($custom, $childXml, 'firstName', htmlspecialchars($custom->get_billing_first_name()));
-            $this->addIfNotEmpty($custom, $childXml, 'lastName', htmlspecialchars($custom->get_billing_last_name()));
-            $this->addIfNotEmpty($custom, $childXml, 'email', htmlspecialchars($custom->get_billing_email()));
-            $this->addIfNotEmpty($custom, $childXml, 'street', htmlspecialchars($custom->get_billing_address_1()));
-            $this->addIfNotEmpty($custom, $childXml, 'city', htmlspecialchars($custom->get_billing_city()));
-            $this->addIfNotEmpty($custom, $childXml, 'zipCode', htmlspecialchars($custom->get_billing_postcode()));
-            $this->addIfNotEmpty($custom, $childXml, 'phoneNumber1', htmlspecialchars($custom->get_billing_phone()));
-            $this->addIfNotEmpty($custom, $childXml, 'country', strtolower($custom->get_billing_country()));
-            $this->addIfNotEmpty($custom, $childXml, 'companyName', htmlspecialchars($custom->get_billing_company()));
-            $this->addItem($childXml, 'consentTitle', 'Woocommerce');
-        }
-    }
+	protected function createXml(\WP_Post $post) {
+		$coupon = new \WC_Coupon($post->post_name);
+		//var_dump($coupon);
+		$childXml = $this->xml->addChild('c');
+		$childXml->addAttribute("id", $coupon->get_id());
+		$this->addItem($childXml, 'reusable', $coupon->get_usage_limit() > 1 ? 1 : 0);
+		$this->addItem($childXml, 'discountType', $coupon->is_type('percent') ? 'PERCENTUAL' : 'MONETARY');
+		$this->addItem($childXml, 'discount', $coupon->get_amount());
+		$this->addItem($childXml, 'validTo', $coupon->get_date_expires());
+		$values = $childXml->addChild('values');
+		$this->addItem($values, 'v', $coupon->get_code());
+	}
 }

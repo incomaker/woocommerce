@@ -3,7 +3,7 @@
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.0.2
+Version: 2.1.0
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -34,16 +34,16 @@ use Incomaker\Events;
 require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
 if (!defined('ABSPATH')) {
-    exit;
+	exit;
 }
 
 if (!defined('MIN_PHP_VERSION')) {
-    define('MIN_PHP_VERSION', '5.6.0');
+	define('MIN_PHP_VERSION', '5.6.0');
 }
 
 function incomaker_activate($w)
 {
-    register_uninstall_hook(__FILE__, 'incomaker_uninstall');
+	register_uninstall_hook(__FILE__, 'incomaker_uninstall');
 }
 
 function incomaker_deactivate($w)
@@ -57,12 +57,12 @@ function incomaker_uninstall()
 class Incomaker
 {
 
-    public function php_upgrade_notice()
-    {
-        $info = get_plugin_data(__FILE__);
-        _e(
-            sprintf(
-                '
+	public function php_upgrade_notice()
+	{
+		$info = get_plugin_data(__FILE__);
+		_e(
+			sprintf(
+				'
       <div class="error notice">
         <p>
           The minimum required PHP version is %s. Your current version is %s.
@@ -70,61 +70,64 @@ class Incomaker
         </p>
       </div>
       ', MIN_PHP_VERSION, PHP_VERSION
-            )
-        );
-    }
+			)
+		);
+	}
 
-    public function woocommerce_not_active()
-    {
-        ?>
-        <div class="error notice">
-            <p><?php _e('This plugin requires WooCommerce. Please install and activate it first.', 'incomaker'); ?></p>
-        </div>
-        <?php
-    }
+	public function woocommerce_not_active()
+	{
+		?>
+		<div class="error notice">
+			<p><?php _e('This plugin requires WooCommerce. Please install and activate it first.', 'incomaker'); ?></p>
+		</div>
+		<?php
+	}
 
-    public function register_rest_controller() {
-        $controller = new Incomaker\Feed();
-        $controller->registerRoutes();
-    }
+	public function register_rest_controller()
+	{
+		$controller = new Incomaker\Feed();
+		$controller->registerRoutes();
+	}
 
-    function feed_handler( $served, $result, $request, $server ) {
+	function feed_handler($served, $result, $request, $server)
+	{
+		if ('/' . \Incomaker\Feed::ROUTE . \Incomaker\Feed::COMMAND !== $request->get_route() ||
+			'execute' !== $request->get_attributes()['callback'][1])
+			return $served;
 
-        if ( '/'.\Incomaker\Feed::ROUTE.\Incomaker\Feed::COMMAND !== $request->get_route() ||
-            'execute' !== $request->get_attributes()['callback'][1] )
-            return $served;
+		if ($result->is_error()) {
+			echo $result->as_error()->get_error_message();
+		} else {
+			$server->send_header('Content-Type', 'application/xml; Charset=UTF-8');
+			echo $result->get_data();
+		}
+		return true;
+	}
 
-        $server->send_header( 'Content-Type', 'application/xml; Charset=UTF-8' );
+	public function execute()
+	{
+		if (!function_exists('is_plugin_active_for_network')) {
+			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+		}
+		if (version_compare(PHP_VERSION, MIN_PHP_VERSION) < 0) {
+			add_action('admin_notices', array($this, 'php_upgrade_notice'));
+		} elseif (!in_array('incomaker/incomaker.php', (array)get_option('active_plugins', array()), true)
+			&& !is_plugin_active_for_network('incomaker/incomaker.php')) {
 
-        echo $result->get_data();
+			add_action('admin_notices', array($this, 'woocommerce_not_active'));
+		} else {
+			load_plugin_textdomain('incomaker', false, dirname(plugin_basename(__FILE__)) . '/languages');
+			include_once __DIR__ . '/vendor/autoload.php';
 
-        exit;
-    }
-
-    public function execute()
-    {
-        if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-            require_once(ABSPATH . '/wp-admin/includes/plugin.php');
-        }
-        if (version_compare(PHP_VERSION, MIN_PHP_VERSION) < 0) {
-            add_action('admin_notices', array($this, 'php_upgrade_notice'));
-        } elseif (!in_array('incomaker/incomaker.php', (array)get_option('active_plugins', array()), true)
-            && ! is_plugin_active_for_network('incomaker/incomaker.php')) {
-
-            add_action('admin_notices', array($this, 'woocommerce_not_active'));
-        } else {
-            load_plugin_textdomain('incomaker', false, dirname(plugin_basename(__FILE__)) . '/languages');
-            include_once __DIR__ . '/vendor/autoload.php';
-
-            Options::getInstance();
-            Tracking::getInstance();
-            Events::getInstance();
-            register_activation_hook(__FILE__, 'incomaker_activate');
-            register_deactivation_hook(__FILE__, 'incomaker_deactivate');
-            add_action( 'rest_api_init', array($this, 'register_rest_controller' ));
-            add_filter( 'rest_pre_serve_request', array($this, 'feed_handler' ), 10, 4);
-        }
-    }
+			Options::getInstance();
+			Tracking::getInstance();
+			Events::getInstance();
+			register_activation_hook(__FILE__, 'incomaker_activate');
+			register_deactivation_hook(__FILE__, 'incomaker_deactivate');
+			add_action('rest_api_init', array($this, 'register_rest_controller'));
+			add_filter('rest_pre_serve_request', array($this, 'feed_handler'), 10, 4);
+		}
+	}
 }
 
 (new Incomaker())->execute();

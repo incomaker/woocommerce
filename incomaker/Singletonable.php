@@ -22,5 +22,5 @@ namespace Incomaker;
 
 interface Singletonable
 {
-    public static function getInstance();
+	public static function getInstance();
 }

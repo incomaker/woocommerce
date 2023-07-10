@@ -21,37 +21,37 @@ namespace Incomaker;
 
 class Tracking implements Singletonable
 {
-    public function __construct()
-    {
-        add_action('wp_enqueue_scripts', array($this, 'incomaker_js_register'));
-        add_filter('clean_url', array($this, 'add_async_forscript'));
-    }
+	public function __construct()
+	{
+		add_action('wp_enqueue_scripts', array($this, 'incomaker_js_register'));
+		add_filter('clean_url', array($this, 'add_async_forscript'));
+	}
 
-    public function incomaker_js_register()
-    {
-        $opts = get_option("incomaker_option");
-        if (isset($opts["account_id"]) && isset($opts["plugin_id"])) {
-            wp_enqueue_script('incomaker', 'https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=' . $opts["account_id"] . '&pluginUuid=' . $opts["plugin_id"] . '#asyncload');
-        }
-    }
+	public function incomaker_js_register()
+	{
+		$opts = get_option("incomaker_option");
+		if (isset($opts["account_id"]) && isset($opts["plugin_id"])) {
+			wp_enqueue_script('incomaker', 'https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=' . $opts["account_id"] . '&pluginUuid=' . $opts["plugin_id"] . '#asyncload');
+		}
+	}
 
-    public function add_async_forscript($url)
-    {
-        if (strpos($url, '#asyncload') === false)
-            return $url;
-        else if (is_admin())
-            return str_replace('#asyncload', '', $url);
-        else
-            return str_replace('#asyncload', '', $url) . "' async='async";
-    }
+	public function add_async_forscript($url)
+	{
+		if (strpos($url, '#asyncload') === false)
+			return $url;
+		else if (is_admin())
+			return str_replace('#asyncload', '', $url);
+		else
+			return str_replace('#asyncload', '', $url) . "' async='async";
+	}
 
-    private static $singleton = null;
+	private static $singleton = null;
 
-    public static function getInstance()
-    {
-        if (self::$singleton == null) {
-            self::$singleton = new Tracking();
-        }
-        return self::$singleton;
-    }
+	public static function getInstance()
+	{
+		if (self::$singleton == null) {
+			self::$singleton = new Tracking();
+		}
+		return self::$singleton;
+	}
 }

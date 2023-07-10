@@ -23,23 +23,25 @@ use \Incomaker\Api\Connector;
 
 class IncomakerDriver implements \Incomaker\Api\DriverInterface
 {
-    private $value;
+	private $value;
 
-    public function __construct($apiKey = null)
-    {
-        $opts = get_option("incomaker_option");
+	public function __construct($apiKey = null)
+	{
+		$opts = get_option("incomaker_option");
 
-        $this->value[Connector::INCOMAKER_API_KEY] = isset($apiKey) ? $apiKey : (isset($opts["api_key"]) ? $opts["api_key"] : "");
-        $this->value[Connector::INCOMAKER_ACCOUNT_ID] = isset($opts["account_id"])?$opts["account_id"]:"";
-        $this->value[Connector::INCOMAKER_PLUGIN_ID] = isset($opts["plugin_id"])?$opts["plugin_id"]:"";
-    }
+		$this->value[Connector::INCOMAKER_API_KEY] = isset($apiKey) ? $apiKey : (isset($opts["api_key"]) ? $opts["api_key"] : "");
+		$this->value[Connector::INCOMAKER_ACCOUNT_ID] = isset($opts["account_id"]) ? $opts["account_id"] : "";
+		$this->value[Connector::INCOMAKER_PLUGIN_ID] = isset($opts["plugin_id"]) ? $opts["plugin_id"] : "";
+	}
 
-    public function getSetting($key) {
-        return $this->value[$key];
-    }
+	public function getSetting($key)
+	{
+		return $this->value[$key];
+	}
 
-    public function updateSetting($key, $value) {
-        $this->value[$key] = $value;
-    }
+	public function updateSetting($key, $value)
+	{
+		$this->value[$key] = $value;
+	}
 
 }

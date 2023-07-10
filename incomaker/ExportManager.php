@@ -21,24 +21,24 @@ namespace Incomaker;
 
 class ExportManager
 {
-    protected $exports = NULL;
+	protected $exports = NULL;
 
-    public function __construct()
-    {
-        $this->addExport(new ContactExport());
-        $this->addExport(new CategoryExport());
-        $this->addExport(new ProductExport());
-        $this->addExport(new OrderExport());
-        $this->addExport(new CouponExport());
-    }
+	public function __construct()
+	{
+		$this->addExport(new ContactExport());
+		$this->addExport(new CategoryExport());
+		$this->addExport(new ProductExport());
+		$this->addExport(new OrderExport());
+		$this->addExport(new CouponExport());
+	}
 
-    protected function addExport(XmlExport $export)
-    {
-        $this->exports[$export::$name] = $export;
-    }
+	protected function addExport(XmlExport $export)
+	{
+		$this->exports[$export::$name] = $export;
+	}
 
-    public function getExport($name)
-    {
-        return $this->exports[$name];
-    }
+	public function getExport($name)
+	{
+		return $this->exports[$name];
+	}
 }

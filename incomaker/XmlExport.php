@@ -19,6 +19,8 @@
 
 namespace Incomaker;
 
+use http\Exception\BadMethodCallException;
+
 abstract class XmlExport
 {
 
@@ -168,5 +170,15 @@ abstract class XmlExport
 			$query['offset'] = $this->getOffset();
 		}
 		return $query;
+	}
+
+	public function supportsCreation(): bool {
+		return false;
+	}
+
+	public function createItems(int $count) {
+		if (!$this->supportsCreation()) {
+			throw new BadMethodCallException("This export does not support item creation!");
+		}
 	}
 }

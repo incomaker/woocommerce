@@ -79,8 +79,10 @@ class OrderExport extends XmlExport
 				$this->addItem($item, "quantity", $itm->get_quantity());
 				$product = $itm->get_product();
 				if ($product instanceof WC_Product) {
-					$price = $this->addItem($item, "price", $product->get_price());
+					$price = $this->addItem($item, "price", wc_get_price_including_tax($product));
 					$price->addAttribute("currency", $order->get_currency());
+					$priceWithoutTax = $this->addItem($item, "priceWithoutTax", wc_get_price_excluding_tax($product));
+					$priceWithoutTax->addAttribute("currency", $order->get_currency());
 				} else {
 					$price = $this->addItem($item, "price", 0);
 					$price->addAttribute("currency", get_woocommerce_currency());

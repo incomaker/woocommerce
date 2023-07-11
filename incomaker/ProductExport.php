@@ -19,6 +19,7 @@
 
 namespace Incomaker;
 
+use http\Exception\BadMethodCallException;
 use SimpleXMLElement;
 
 class ProductExport extends XmlExport
@@ -101,4 +102,5 @@ class ProductExport extends XmlExport
 		$products = get_object_vars(wp_count_posts('product'));
 		return $products["publish"] + $products["future"] + $products["draft"];
 	}
+
 }

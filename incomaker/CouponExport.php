@@ -26,6 +26,8 @@ class CouponExport extends XmlExport
 
 	public static $name = "coupon";
 
+	const COUPON_CODE_LENGTH = 10;
+
 	public function __construct()
 	{
 		$this->xml = new SimpleXMLElement('<coupons/>');
@@ -56,5 +58,68 @@ class CouponExport extends XmlExport
 		$this->addItem($childXml, 'validTo', $coupon->get_date_expires());
 		$values = $childXml->addChild('values');
 		$this->addItem($values, 'v', $coupon->get_code());
+	}
+
+	/**
+	 * Return random number between 0 and 9.
+	 */
+	static function getRandomNumber() {
+		return rand(0,9);
+	}
+
+	/**
+	 * Return random lowercase character.
+	 */
+	static function getRandomLowercase() {
+		return chr(rand(97,122));
+	}
+
+	/**
+	 * Return random uppercase character.
+	 */
+	static function getRandomUppercase() {
+		return strtoupper(self::getRandomLowercase());
+	}
+
+	/**
+	 * Return string of random numbers, uppercase and lowercase characters.
+	 */
+	static function generateRandomToken($len) {
+		$s = '';
+		for ($i = 0; $i < $len; $i++) {
+			$case = rand(0,2);
+			if ($case == 0) {
+				$s .= self::getRandomNumber();
+			} elseif ($case == 1) {
+				$s .= self::getRandomUppercase();
+			} else {
+				$s .= self::getRandomLowercase();
+			}
+		}
+		return $s;
+	}
+
+	public function createCoupon() {
+		$code = null;
+		while ($code === null) {
+			$code = self::generateRandomToken(self::COUPON_CODE_LENGTH);
+			if (wc_get_coupon_id_by_code($code) > 0) {
+				$code = null;
+			}
+		}
+		$coupon = new \WC_Coupon($code);
+		$coupon->set_amount(99);
+		$coupon->save();
+		return $coupon;
+	}
+
+	public function supportsCreation(): bool {
+		return true;
+	}
+
+	public function createItems(int $count) {
+		for ($i = 0; $i < $count; $i++) {
+			$coupon = $this->createCoupon();
+		}
 	}
 }

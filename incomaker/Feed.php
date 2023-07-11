@@ -69,6 +69,14 @@ class Feed
 			$xmlExport->setOffset($request->get_param('offset'));
 			$xmlExport->setId($request->get_param('id'));
 			$xmlExport->setSince($request->get_param('since'));
+
+			$downloadCount = $request->get_param('downloadCount');
+			if (!empty($downloadCount)) {
+				$count = intval($downloadCount);
+				if ($count > 0 && $xmlExport->supportsCreation()) {
+					$xmlExport->createItems($count);
+				}
+			}
 		} catch (InvalidArgumentException $e) {
 			return new \WP_Error("ERROR", $e->getMessage(), array('status' => 400));
 		}

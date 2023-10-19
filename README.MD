@@ -2,6 +2,8 @@
 
 Plugin for Wordpress downloadable from `https://www.incomaker.com/sites/default/files/plugin/woocommerce/incomaker.zip`.
 
+Installation instructions are [here](https://support.incomaker.com/en/hc/2628921009/7/woocommerce).
+
 Provides feeds on URL `/wp-json/incomaker/v210/feed/?type=...` and calls Incomaker API on certain actions.
 
 ## Run and Debug in Docker

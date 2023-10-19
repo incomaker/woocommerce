@@ -30,7 +30,7 @@ services:
     volumes:
       - ./incomaker:/var/www/html/wp-content/plugins/incomaker
     ports:
-      - 80:80
+      - 8081:80
     restart: unless-stopped
     environment:
       - WORDPRESS_DB_HOST=db

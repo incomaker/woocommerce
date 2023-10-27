@@ -24,8 +24,8 @@ Finally activate Incomaker plugin which is already listed in available plugins.
 
 Now you have fresh WordPress installation with WooCommerce and Incomaker, happy debugging.
 
-Fresh WordPress installation is now running on `http://localhost`. Admin console is on `http://localhost/wp-admin` 
-and e-shop on `http://localhost/shop` 
+Fresh WordPress installation is now running on `http://localhost:8081`. Admin console is on `http://localhost:8081/wp-admin` 
+and e-shop on `http://localhost:8081/shop` 
 
 ### Wordpress v. 5.7
 
@@ -57,6 +57,6 @@ There is separate archive for each version and also archive called `incomaker.zi
 
 ### For Wordpress Marketplace
 
-We have account on `wordpress.org` registered with email `incomakermarketing@gmail.com`.
+We have account on `wordpress.org` registered with username `incomakermarketing` and email `support@incomaker.com`.
 
-Currently we are waiting for plugin approval.
+Currently, we are waiting for plugin approval. Status of review process can be checked [here](https://wordpress.org/plugins/developers/add/).

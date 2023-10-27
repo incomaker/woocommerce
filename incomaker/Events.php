@@ -46,6 +46,11 @@ class Events implements Singletonable
 		add_action('post_order_event', array($this, 'incomaker_async_post_order_event'), 10, 6);
 	}
 
+	private function getSanitizedPost($key) {
+		if (!isset($_POST[$key])) return null;
+		return sanitize_text_field(strval($_POST[$key]));
+	}
+
 	public function incomaker_order_add($order_id)
 	{
 
@@ -141,16 +146,16 @@ class Events implements Singletonable
 	public function incomaker_user_register($user_id)
 	{
 		$contact = new \Incomaker\Api\Data\Contact($user_id);
-		$contact->setEmail(isset($_POST['billing_email']) ? strval($_POST['billing_email']) : null);
-		$contact->setFirstName(isset($_POST['billing_first_name']) ? strval($_POST['billing_first_name']) : null);
-		$contact->setLastName(isset($_POST['billing_last_name']) ? strval($_POST['billing_last_name']) : null);
-		$contact->setCompanyName(isset($_POST['billing_company']) ? strval($_POST['billing_company']) : null);
-		$contact->setCountry(isset($_POST['billing_country']) ? strval($_POST['billing_country']) : null);
-		$contact->setStreet(isset($_POST['billing_address_1']) ? strval($_POST['billing_address_1']) : null);
-		$contact->setStreet2(isset($_POST['billing_address_2']) ? strval($_POST['billing_address_2']) : null);
-		$contact->setCity(isset($_POST['billing_city']) ? strval($_POST['billing_city']) : null);
-		$contact->setZipCode(isset($_POST['billing_postcode']) ? strval($_POST['billing_postcode']) : null);
-		$contact->setPhoneNumber1(isset($_POST['billing_phone']) ? strval($_POST['billing_phone']) : null);
+		$contact->setEmail(sanitize_email($this->getSanitizedPost('billing_email')));
+		$contact->setFirstName($this->getSanitizedPost('billing_first_name'));
+		$contact->setLastName($this->getSanitizedPost('billing_last_name'));
+		$contact->setCompanyName($this->getSanitizedPost('billing_company'));
+		$contact->setCountry($this->getSanitizedPost('billing_country'));
+		$contact->setStreet($this->getSanitizedPost('billing_address_1'));
+		$contact->setStreet2($this->getSanitizedPost('billing_address_2'));
+		$contact->setCity($this->getSanitizedPost('billing_city'));
+		$contact->setZipCode($this->getSanitizedPost('billing_postcode'));
+		$contact->setPhoneNumber1($this->getSanitizedPost('billing_phone'));
 
 		as_enqueue_async_action(
 			'register',

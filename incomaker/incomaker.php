@@ -3,7 +3,7 @@
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.1.1
+Version: 2.1.2
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -37,8 +37,8 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-if (!defined('MIN_PHP_VERSION')) {
-	define('MIN_PHP_VERSION', '5.6.0');
+if (!defined('INCOMAKER_MIN_PHP_VERSION')) {
+	define('INCOMAKER_MIN_PHP_VERSION', '5.6.0');
 }
 
 function incomaker_activate($w)
@@ -69,7 +69,7 @@ class Incomaker
           Please, update your PHP (or contact you hosting to do so).
         </p>
       </div>
-      ', MIN_PHP_VERSION, PHP_VERSION
+      ', INCOMAKER_MIN_PHP_VERSION, PHP_VERSION
 			)
 		);
 	}
@@ -96,10 +96,10 @@ class Incomaker
 			return $served;
 
 		if ($result->is_error()) {
-			echo $result->as_error()->get_error_message();
+			echo esc_html($result->as_error()->get_error_message());
 		} else {
 			$server->send_header('Content-Type', 'application/xml; Charset=UTF-8');
-			echo $result->get_data();
+			echo esc_xml($result->get_data());
 		}
 		return true;
 	}
@@ -109,7 +109,7 @@ class Incomaker
 		if (!function_exists('is_plugin_active_for_network')) {
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
 		}
-		if (version_compare(PHP_VERSION, MIN_PHP_VERSION) < 0) {
+		if (version_compare(PHP_VERSION, INCOMAKER_MIN_PHP_VERSION) < 0) {
 			add_action('admin_notices', array($this, 'php_upgrade_notice'));
 		} elseif (!in_array('incomaker/incomaker.php', (array)get_option('active_plugins', array()), true)
 			&& !is_plugin_active_for_network('incomaker/incomaker.php')) {

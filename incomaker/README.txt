@@ -3,9 +3,9 @@
 Contributors: incomaker
 Tags: marketing, emailing, popups, marketing automation
 Requires PHP: 5.6.0
-Stable tag: trunk
+Stable tag: 2.1.2
 Requires at least: 4.7
-Tested up to: 6.2.2
+Tested up to: 6.3.2
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

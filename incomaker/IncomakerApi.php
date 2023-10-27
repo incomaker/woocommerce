@@ -16,33 +16,23 @@ class IncomakerApi
 		$this->incomaker = new \Incomaker\Api\Connector(new IncomakerDriver($apiKey));
 	}
 
-	public function getPermId()
-	{
-
-		if (isset($_COOKIE["incomaker_p"])) {
-			return $_COOKIE["incomaker_p"];
-		}
-		if (isset($_COOKIE["permId"])) {
-			return $_COOKIE["permId"];
-		}
-		return "";
+	private function getSanitizedCookie($key, $default = null) {
+		if (!isset($_COOKIE[$key])) return $default;
+		$value = sanitize_text_field(strval($_COOKIE[$key]));
+		if (empty($value)) return $default;
+		return $value;
 	}
 
-	public function getCampaignId()
-	{
-		if (isset($_COOKIE["incomaker_c"])) {
-			return $_COOKIE["incomaker_c"];
-		} else {
-			return "";
-		}
+	public function getPermId() {
+		return $this->getSanitizedCookie('incomaker_p', $this->getSanitizedCookie('permId', ''));
 	}
 
-	public function getSessionId()
-	{
-		if (isset($_COOKIE["inco_session_temp_browser"])) {
-			return $_COOKIE["inco_session_temp_browser"];
-		}
-		return "";
+	public function getCampaignId()	{
+		return $this->getSanitizedCookie('incomaker_c', '');
+	}
+
+	public function getSessionId() {
+		return $this->getSanitizedCookie('inco_session_temp_browser', '');
 	}
 
 	public function postProductEvent($event, $customer, $product, $session, $permId)

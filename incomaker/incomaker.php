@@ -1,9 +1,15 @@
 <?php
+
+// Exit if accessed directly
+if (!defined('ABSPATH')) {
+	exit;
+}
+
 /*
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.1.2
+Version: 2.1.3
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -33,10 +39,6 @@ use Incomaker\Events;
 
 require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
-if (!defined('ABSPATH')) {
-	exit;
-}
-
 if (!defined('INCOMAKER_MIN_PHP_VERSION')) {
 	define('INCOMAKER_MIN_PHP_VERSION', '5.6.0');
 }
@@ -60,25 +62,30 @@ class Incomaker
 	public function php_upgrade_notice()
 	{
 		$info = get_plugin_data(__FILE__);
-		_e(
-			sprintf(
-				'
-      <div class="error notice">
-        <p>
-          The minimum required PHP version is %s. Your current version is %s.
-          Please, update your PHP (or contact you hosting to do so).
-        </p>
-      </div>
-      ', INCOMAKER_MIN_PHP_VERSION, PHP_VERSION
-			)
-		);
+
+		?>
+			<div class="error notice">
+				<p>
+					<?php
+						printf(
+							esc_html__('The minimum required PHP version is %s. Your current version is %s.', 'incomaker' ),
+							esc_html(INCOMAKER_MIN_PHP_VERSION),
+							esc_html(PHP_VERSION)
+						);
+					?>
+				</p>
+				<p>
+					<?php esc_html_e('Please, update your PHP (or contact you hosting to do so).', 'incomaker'); ?>
+				</p>
+			</div>
+		<?php
 	}
 
 	public function woocommerce_not_active()
 	{
 		?>
 		<div class="error notice">
-			<p><?php _e('This plugin requires WooCommerce. Please install and activate it first.', 'incomaker'); ?></p>
+			<p><?php esc_html_e('This plugin requires WooCommerce. Please install and activate it first.', 'incomaker'); ?></p>
 		</div>
 		<?php
 	}

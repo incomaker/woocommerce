@@ -59,6 +59,7 @@ class Options implements Singletonable
 		<div class="wrap">
 			<h2>Incomaker</h2>
 			<p>Marketing automation with artificial intelligence</p>
+
 			<?php settings_errors(); ?>
 
 			<form method="post" action="options.php">
@@ -95,28 +96,28 @@ class Options implements Singletonable
 		);
 
 		add_settings_field(
-			'api_key', // id
+			'incomaker_api_key', // id
 			'API Key', // title
-			array($this, 'api_key_callback'), // callback
+			array($this, 'incomaker_api_key_callback'), // callback
 			'incomaker-admin', // page
 			'incomaker_setting_section', // section
 			[
-				'label_for' => 'api_key'
+				'label_for' => 'incomaker_api_key'
 			]
 		);
 
 		add_settings_field(
-			'account_id', // id
+			'incomaker_account_id', // id
 			'Account ID', // title
-			array($this, 'account_id_callback'), // callback
+			array($this, 'incomaker_account_id_callback'), // callback
 			'incomaker-admin', // page
 			'incomaker_setting_section' // section
 		);
 
 		add_settings_field(
-			'plugin_id', // id
+			'incomaker_plugin_id', // id
 			'Plugin ID', // title
-			array($this, 'plugin_id_callback'), // callback
+			array($this, 'incomaker_plugin_id_callback'), // callback
 			'incomaker-admin', // page
 			'incomaker_setting_section' // section
 		);
@@ -124,24 +125,24 @@ class Options implements Singletonable
 
 	public function incomaker_sanitize($input)
 	{
-		$keyOld = $this->getVal('api_key');
+		$keyOld = $this->getVal('incomaker_api_key');
 
 		$sanitary_values = array();
-		if (isset($input['api_key'])) {
-			$sanitary_values['api_key'] = sanitize_text_field($input['api_key']);
+		if (isset($input['incomaker_api_key'])) {
+			$sanitary_values['incomaker_api_key'] = sanitize_text_field($input['incomaker_api_key']);
 		}
 
-		$keyNew = $sanitary_values['api_key'];
-		$valuesSet = $this->valExists('account_id') && $this->valExists('plugin_id');
+		$keyNew = $sanitary_values['incomaker_api_key'];
+		$valuesSet = $this->valExists('incomaker_account_id') && $this->valExists('incomaker_plugin_id');
 
 		if (empty($keyNew)) {
-			$sanitary_values['account_id'] = '';
-			$sanitary_values['plugin_id'] = '';
+			$sanitary_values['incomaker_account_id'] = '';
+			$sanitary_values['incomaker_plugin_id'] = '';
 		} else if (($keyOld != $keyNew) || !$valuesSet) {
 			$incomakerApi = new IncomakerApi($keyNew);
 			$info = $incomakerApi->getPluginInfo();
-			$sanitary_values['account_id'] = $info->accountUuid;
-			$sanitary_values['plugin_id'] = $info->pluginUuid;
+			$sanitary_values['incomaker_account_id'] = $info->accountUuid;
+			$sanitary_values['incomaker_plugin_id'] = $info->pluginUuid;
 		}
 
 		return $sanitary_values;
@@ -152,32 +153,30 @@ class Options implements Singletonable
 
 	}
 
-	public function api_key_callback()
+	public function incomaker_api_key_callback()
 	{
-		$value = isset($this->incomaker_options['api_key']) ? esc_attr($this->incomaker_options['api_key']) : '';
-
+		$value = $this->getVal('incomaker_api_key');
 		?>
-		<input class="regular-text" type="text" name="incomaker_option[api_key]" id="api_key" value="<?= $value ?>">
-		<p>When proper API Key is set, data from your e-shop will be shared with Incomaker.</p>
-		<p>You will get your API Key in <a target="_blank" href="https://my.incomaker.com/admin/plugin_profile.xhtml">Eshop Info</a> section of your
-			account at <strong>incomaker.com</strong>.</p>
-		<p>By filling your Incomaker API Key you agree to our <a href="https://www.incomaker.com/en/terms-and-conditions">Terms & Conditions</a>.</p>
+			<input class="regular-text" type="text" name="incomaker_option[incomaker_api_key]" id="incomaker_api_key" value="<?php echo esc_attr($value) ?>">
+			<p>When proper API Key is set, data from your e-shop will be shared with Incomaker.</p>
+			<p>You will get your API Key in <a target="_blank" href="https://my.incomaker.com/admin/plugin_profile.xhtml">Eshop Info</a> section of your account at <strong>incomaker.com</strong>.</p>
+			<p>By filling your Incomaker API Key you agree to our <a href="https://www.incomaker.com/en/terms-and-conditions">Terms & Conditions</a>.</p>
 		<?php
 	}
 
-	public function account_id_callback()
+	public function incomaker_account_id_callback()
 	{
-		printf(
-			'<input class="regular-text" type="text" name="incomaker_option[account_id]" id="account_id" value="%s" disabled>',
-			isset($this->incomaker_options['account_id']) ? esc_attr($this->incomaker_options['account_id']) : ''
-		);
+		$value = $this->getVal('incomaker_account_id');
+		?>
+			<input class="regular-text" type="text" name="incomaker_option[incomaker_account_id]" id="incomaker_account_id" value="<?php echo esc_attr($value) ?>" disabled>
+		<?php
 	}
 
-	public function plugin_id_callback()
+	public function incomaker_plugin_id_callback()
 	{
-		$value = $this->getVal('plugin_id');
+		$value = $this->getVal('incomaker_plugin_id');
 		?>
-		<input class="regular-text" type="text" name="incomaker_option[plugin_id]" id="plugin_id" value="<?= $value ?>" disabled>
+			<input class="regular-text" type="text" name="incomaker_option[incomaker_plugin_id]" id="incomaker_plugin_id" value="<?php echo esc_attr($value) ?>" disabled>
 		<?php
 	}
 

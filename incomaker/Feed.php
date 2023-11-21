@@ -56,7 +56,7 @@ class Feed
 		} catch (Exception $e) {
 			return new \WP_Error("UNKNOWNTYPE", "Unknown feed type! Use URL query to specify feed type (product, contact, category, order or coupon).", array('status' => 400));
 		}
-		$apiKey = get_option("incomaker_option")['api_key'];
+		$apiKey = get_option("incomaker_option")['incomaker_api_key'];
 		if (strlen($apiKey) === 0) {
 			return new \WP_Error("APIKEYNOTSET", "API key not set! Incomaker API key must be configured on plugin Settings page.", array('status' => 403));
 		}

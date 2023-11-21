@@ -30,8 +30,8 @@ class Tracking implements Singletonable
 	public function incomaker_js_register()
 	{
 		$opts = get_option("incomaker_option");
-		if (isset($opts["account_id"]) && isset($opts["plugin_id"])) {
-			wp_enqueue_script('incomaker', 'https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=' . $opts["account_id"] . '&pluginUuid=' . $opts["plugin_id"] . '#asyncload');
+		if (isset($opts["incomaker_account_id"]) && isset($opts["incomaker_plugin_id"])) {
+			wp_enqueue_script('incomaker', 'https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=' . $opts["incomaker_account_id"] . '&pluginUuid=' . $opts["incomaker_plugin_id"] . '#asyncload');
 		}
 	}
 

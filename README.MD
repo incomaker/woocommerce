@@ -1,6 +1,6 @@
 # Incomaker Woo Commerce plugin
 
-Plugin for Wordpress downloadable from `https://www.incomaker.com/sites/default/files/plugin/woocommerce/incomaker.zip`.
+Plugin for WordPress downloadable from `https://www.incomaker.com/sites/default/files/plugin/woocommerce/incomaker.zip`.
 
 Installation instructions are [here](https://support.incomaker.com/en/hc/2628921009/7/woocommerce).
 
@@ -20,12 +20,15 @@ Next you will have to install and activate Woo Commerce plugin. (via web interfa
 
 Run `composer` to create and update `vendor` folder.
 
-Finally activate Incomaker plugin which is already listed in available plugins.
+Finally, activate Incomaker plugin which is already listed in available plugins.
 
 Now you have fresh WordPress installation with WooCommerce and Incomaker, happy debugging.
 
 Fresh WordPress installation is now running on `http://localhost:8081`. Admin console is on `http://localhost:8081/wp-admin` 
 and e-shop on `http://localhost:8081/shop` 
+
+Products data feed example: 
+`http://localhost:8081/wp-json/incomaker/v210/feed/?type=product&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741`
 
 ### Wordpress v. 5.7
 

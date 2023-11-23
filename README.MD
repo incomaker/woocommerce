@@ -8,8 +8,6 @@ Provides feeds on URL `/wp-json/incomaker/v210/feed/?type=...` and calls Incomak
 
 ## Run and Debug in Docker
 
-### Wordpress v. 6.2 and newer
-
 Start Docker container:
 
     sudo docker compose up
@@ -27,12 +25,19 @@ Now you have fresh WordPress installation with WooCommerce and Incomaker, happy 
 Fresh WordPress installation is now running on `http://localhost:8081`. Admin console is on `http://localhost:8081/wp-admin` 
 and e-shop on `http://localhost:8081/shop` 
 
+### Data Feeds
+
 Products data feed example: 
 `http://localhost:8081/wp-json/incomaker/v210/feed/?type=product&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741`
 
+You will have to change permalinks settings (http://localhost:8081/wp-admin/options-permalink.php) to make pretty feed URLs work!
+
+Without pretty links:
+`http://localhost:8081/?rest_route=/incomaker/v210/feed/&type=product&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741`
+
 ### Wordpress v. 5.7
 
-You will have to download, install and activate Woo Commerce plugin manually.
+Description above is only valid for WordPress v. 6.2 and newer. To use version 5.7 you will have to download, install and activate Woo Commerce plugin manually.
 (older versions can be downloaded here: https://wordpress.org/plugins/woocommerce/advanced/)
 
 Put the plugin folder to `wordpress-5.7/woocommerce`.

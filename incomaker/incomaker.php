@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.1.3
+Version: 2.1.4
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -106,7 +106,7 @@ class Incomaker
 			echo esc_html($result->as_error()->get_error_message());
 		} else {
 			$server->send_header('Content-Type', 'application/xml; Charset=UTF-8');
-			echo esc_xml($result->get_data());
+			echo $result->get_data();
 		}
 		return true;
 	}

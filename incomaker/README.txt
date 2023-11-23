@@ -3,7 +3,7 @@
 Contributors: incomaker
 Tags: marketing, emailing, popups, marketing automation
 Requires PHP: 5.6.0
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 Requires at least: 4.7
 Tested up to: 6.3.2
 License: GPL v3

@@ -24,25 +24,29 @@ class Tracking implements Singletonable
 	public function __construct()
 	{
 		add_action('wp_enqueue_scripts', array($this, 'incomaker_js_register'));
-		add_filter('clean_url', array($this, 'add_async_forscript'));
 	}
 
 	public function incomaker_js_register()
 	{
 		$opts = get_option("incomaker_option");
-		if (isset($opts["incomaker_account_id"]) && isset($opts["incomaker_plugin_id"])) {
-			wp_enqueue_script('incomaker', 'https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=' . $opts["incomaker_account_id"] . '&pluginUuid=' . $opts["incomaker_plugin_id"] . '#asyncload');
+		$accountId = isset($opts["incomaker_account_id"]) ? $opts["incomaker_account_id"] : null;
+		$pluginId = isset($opts["incomaker_plugin_id"]) ? $opts["incomaker_plugin_id"] : null;
+		if (isset($accountId) && isset($pluginId)) {
+			$url = sprintf(
+				"https://dg.incomaker.com/tracking/resources/js/INlib.js?accountUuid=%s&pluginUuid=%s",
+				$accountId,
+				$pluginId
+			);
+			wp_enqueue_script(
+				'incomaker',
+				$url,
+				array(),
+				'2.1.5',
+				array(
+					'strategy'  => 'async'
+				)
+			);
 		}
-	}
-
-	public function add_async_forscript($url)
-	{
-		if (strpos($url, '#asyncload') === false)
-			return $url;
-		else if (is_admin())
-			return str_replace('#asyncload', '', $url);
-		else
-			return str_replace('#asyncload', '', $url) . "' async='async";
 	}
 
 	private static $singleton = null;

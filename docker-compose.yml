@@ -10,9 +10,8 @@ services:
       - MYSQL_DATABASE=wordpress
       - MYSQL_USER=wordpress
       - MYSQL_PASSWORD=wordpress
-    expose:
-      - 3306
-      - 33060
+    ports:
+      - 3306:3306
 
   composer:
     image: composer

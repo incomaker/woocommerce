@@ -164,7 +164,8 @@ abstract class XmlExport
 		} else {
 			$query = array('orderby' => 'date', 'order' => 'asc');
 			if (!empty($this->getSince())) {
-				$query['date_query'] = array('after' => $this->getSince(), 'inclusive' => true);
+				$today = date("Y-m-j");
+				$query['date_modified'] = sprintf('%s...%s', $this->getSince(), $today);
 			}
 			$query[$this->limitIdentifier] = $this->getLimit();
 			$query['offset'] = $this->getOffset();

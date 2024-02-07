@@ -85,7 +85,7 @@ class Incomaker
 	{
 		?>
 		<div class="error notice">
-			<p><?php esc_html_e('This plugin requires WooCommerce. Please install and activate it first.', 'incomaker'); ?></p>
+			<p><?php esc_html_e('Incomaker plugin requires WooCommerce. Please install and activate WooCommerce plugin first.', 'incomaker'); ?></p>
 		</div>
 		<?php
 	}
@@ -111,6 +111,10 @@ class Incomaker
 		return true;
 	}
 
+	function woocommerce_plugin_active() {
+		return in_array('woocommerce/woocommerce.php', (array)get_option('active_plugins', array()), true);
+	}
+
 	public function execute()
 	{
 		if (!function_exists('is_plugin_active_for_network')) {
@@ -118,9 +122,7 @@ class Incomaker
 		}
 		if (version_compare(PHP_VERSION, INCOMAKER_MIN_PHP_VERSION) < 0) {
 			add_action('admin_notices', array($this, 'php_upgrade_notice'));
-		} elseif (!in_array('incomaker/incomaker.php', (array)get_option('active_plugins', array()), true)
-			&& !is_plugin_active_for_network('incomaker/incomaker.php')) {
-
+		} elseif (!$this->woocommerce_plugin_active()) {
 			add_action('admin_notices', array($this, 'woocommerce_not_active'));
 		} else {
 			load_plugin_textdomain('incomaker', false, dirname(plugin_basename(__FILE__)) . '/languages');

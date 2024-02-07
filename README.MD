@@ -14,7 +14,7 @@ Start Docker container:
 
 First you will have to activate WordPress installation by completing the wizard.
 
-Next you will have to install and activate Woo Commerce plugin. (via web interface)
+Next you will have to install and activate **Woo Commerce** plugin. (via web interface)
 
 Run `composer` to create and update `vendor` folder.
 

@@ -11,7 +11,7 @@ services:
       - MYSQL_USER=wordpress
       - MYSQL_PASSWORD=wordpress
     ports:
-      - 3306:3306
+      - 3307:3306
 
   composer:
     image: composer
@@ -25,7 +25,7 @@ services:
     depends_on:
       - composer
       - db
-    image: wordpress
+    image: wordpress:6.3.2
     volumes:
       - ./incomaker:/var/www/html/wp-content/plugins/incomaker
     ports:

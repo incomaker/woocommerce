@@ -19,7 +19,6 @@
 
 namespace Incomaker;
 
-use http\Exception\BadMethodCallException;
 use SimpleXMLElement;
 
 class ProductExport extends XmlExport

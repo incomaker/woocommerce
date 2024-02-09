@@ -150,7 +150,7 @@ abstract class XmlExport
 	}
 
 	public function getUserLocale($user) {
-
+		$locale = null;
 		$user_object = get_user_by('id', $user);
 		if (!empty($user_object)) {
 			$locale = $user_object->locale;

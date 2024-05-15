@@ -159,7 +159,7 @@ class Options implements Singletonable
 		?>
 			<input class="regular-text" type="text" name="incomaker_option[incomaker_api_key]" id="incomaker_api_key" value="<?php echo esc_attr($value) ?>">
 			<p>When proper API Key is set, data from your e-shop will be shared with Incomaker.</p>
-			<p>You will get your API Key in <a target="_blank" href="https://my.incomaker.com/admin/plugin_profile.xhtml">Eshop Info</a> section of your account at <strong>incomaker.com</strong>.</p>
+			<p>You will get your API Key in <a target="_blank" href="https://my.incomaker.com/admin/plugin_profile.xhtml">Eshop Info</a> section of your account at <strong>my.incomaker.com</strong>.</p>
 			<p>By filling your Incomaker API Key you agree to our <a href="https://www.incomaker.com/en/terms-and-conditions">Terms & Conditions</a>.</p>
 		<?php
 	}

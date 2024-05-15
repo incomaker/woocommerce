@@ -25,7 +25,7 @@ services:
     depends_on:
       - composer
       - db
-    image: wordpress:6.3.2
+    image: wordpress:6.5.3
     volumes:
       - ./incomaker:/var/www/html/wp-content/plugins/incomaker
     ports:

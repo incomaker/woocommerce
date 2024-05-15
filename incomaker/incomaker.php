@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.1.7
+Version: 2.1.8
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3

@@ -10,7 +10,7 @@ Provides feeds on URL `/wp-json/incomaker/v210/feed/?type=...` and calls Incomak
 
 Start Docker container:
 
-    sudo docker compose up
+    bin/start-dev
 
 First you will have to activate WordPress installation by completing the wizard.
 
@@ -58,6 +58,10 @@ Activate Incomaker plugin which is already listed in available plugins.
 ### For direct download
 
 Wordpress plugins are distributed as `zip` archives downloaded from `www.incomaker.com`.
+
+To create the archive:
+
+    bin/package-plugin
 
 Archives are placed in folder `/var/www/incomaker.com/https_www/public_html/sites/default/files/plugin/woocommerce` on `www` server.
 

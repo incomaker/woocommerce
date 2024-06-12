@@ -1,0 +1,1 @@
+docker compose -f docker-compose-no-dev.yml up -d

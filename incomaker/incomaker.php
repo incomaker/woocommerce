@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.1.9
+Version: 2.1.10
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -123,7 +123,8 @@ class Incomaker
 		if (!function_exists('is_plugin_active_for_network')) {
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
 		}
-		$apiKey = get_option("incomaker_option")['incomaker_api_key'];
+		$options = get_option("incomaker_option");
+		$apiKey = is_array($options) && isset($options['incomaker_api_key']) ? $options['incomaker_api_key'] : '';
 		if (strlen($apiKey) === 0) {
 			add_action('admin_notices', array($this, 'api_key_not_set'));
 		}

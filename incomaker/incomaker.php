@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.1.8
+Version: 2.1.9
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -81,11 +81,10 @@ class Incomaker
 		<?php
 	}
 
-	public function woocommerce_not_active()
-	{
+	public function woocommerce_not_active() {
 		?>
-		<div class="error notice">
-			<p><?php esc_html_e('Incomaker plugin requires WooCommerce. Please install and activate WooCommerce plugin first.', 'incomaker'); ?></p>
+		<div class="notice notice-warning">
+			<p><?php esc_html_e('Warning: Incomaker plugin will not provide full functionality without a WooCommerce plugin!', 'incomaker'); ?></p>
 		</div>
 		<?php
 	}
@@ -111,7 +110,7 @@ class Incomaker
 		return true;
 	}
 
-	function woocommerce_plugin_active() {
+	public static function woocommerce_plugin_active() {
 		return in_array('woocommerce/woocommerce.php', (array)get_option('active_plugins', array()), true);
 	}
 
@@ -120,14 +119,14 @@ class Incomaker
 		if (!function_exists('is_plugin_active_for_network')) {
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
 		}
+		if (!self::woocommerce_plugin_active()) {
+			add_action('admin_notices', array($this, 'woocommerce_not_active'));
+		}
 		if (version_compare(PHP_VERSION, INCOMAKER_MIN_PHP_VERSION) < 0) {
 			add_action('admin_notices', array($this, 'php_upgrade_notice'));
-		} elseif (!$this->woocommerce_plugin_active()) {
-			add_action('admin_notices', array($this, 'woocommerce_not_active'));
 		} else {
 			load_plugin_textdomain('incomaker', false, dirname(plugin_basename(__FILE__)) . '/languages');
 			include_once __DIR__ . '/vendor/autoload.php';
-
 			Options::getInstance();
 			Tracking::getInstance();
 			Events::getInstance();

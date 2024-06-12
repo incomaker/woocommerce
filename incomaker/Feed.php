@@ -21,6 +21,7 @@ namespace Incomaker;
 
 use BadFunctionCallException;
 use Exception;
+use Incomaker;
 
 class Feed
 {
@@ -50,6 +51,9 @@ class Feed
 
 	function execute(\WP_REST_Request $request)
 	{
+		if (!Incomaker::woocommerce_plugin_active()) {
+			return new \WP_Error("WOO_MISSING", "Incomaker plugin requires WooCommerce plugin to generate XML feeds!", array('status' => 500));
+		}
 		try {
 			$xmlExport = $this->manager->getExport($request->get_param('type'));
 			if ($xmlExport == NULL) throw new BadFunctionCallException();

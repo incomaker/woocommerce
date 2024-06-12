@@ -19,6 +19,8 @@
 
 namespace Incomaker;
 
+use Incomaker;
+
 class Options implements Singletonable
 {
 
@@ -54,6 +56,14 @@ class Options implements Singletonable
 
 	public function incomaker_create_admin_page()
 	{
+		if (!Incomaker::woocommerce_plugin_active()) {
+			?>
+			<div class="notice notice-warning">
+				<p><?php esc_html_e('Warning: Incomaker plugin will not provide full functionality without a WooCommerce plugin!', 'incomaker'); ?></p>
+			</div>
+			<?php
+		}
+
 		$this->incomaker_options = get_option('incomaker_option'); ?>
 
 		<div class="wrap">
@@ -150,7 +160,6 @@ class Options implements Singletonable
 
 	public function incomaker_section_info()
 	{
-
 	}
 
 	public function incomaker_api_key_callback()

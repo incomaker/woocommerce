@@ -81,11 +81,15 @@ class Incomaker
 		<?php
 	}
 
-	public function woocommerce_not_active() {
+	public function api_key_not_set() {
+		$settings_url = admin_url('admin.php?page=incomaker');
 		?>
-		<div class="notice notice-warning">
-			<p><?php esc_html_e('Warning: Incomaker plugin will not provide full functionality without a WooCommerce plugin!', 'incomaker'); ?></p>
-		</div>
+			<div class="notice error">
+				<p>
+					<?php esc_html_e("Incomaker API key is not set! Plugin will not work. You can set the API key on ", 'incomaker');?>
+					<a href="<?=$settings_url?>">Settings page</a>.
+				</p>
+			</div>
 		<?php
 	}
 
@@ -119,8 +123,9 @@ class Incomaker
 		if (!function_exists('is_plugin_active_for_network')) {
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
 		}
-		if (!self::woocommerce_plugin_active()) {
-			add_action('admin_notices', array($this, 'woocommerce_not_active'));
+		$apiKey = get_option("incomaker_option")['incomaker_api_key'];
+		if (strlen($apiKey) === 0) {
+			add_action('admin_notices', array($this, 'api_key_not_set'));
 		}
 		if (version_compare(PHP_VERSION, INCOMAKER_MIN_PHP_VERSION) < 0) {
 			add_action('admin_notices', array($this, 'php_upgrade_notice'));

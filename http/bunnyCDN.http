@@ -1,0 +1,3 @@
+### reset cache of wordpress plugin
+GET https://api.bunny.net/purge?url=https://www.incomaker.com/sites/default/files/plugin/woocommerce/incomaker.zip
+AccessKey: e61afeec-ac65-4cb8-8440-fd816a4d5edb4ec8c619-23ed-4529-a2dc-d4fcc3412caa

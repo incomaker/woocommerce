@@ -2,7 +2,7 @@
 
 Plugin for WordPress downloadable from `https://www.incomaker.com/sites/default/files/plugin/woocommerce/incomaker.zip`.
 
-Installation instructions are [here](https://support.incomaker.com/en/hc/2628921009/7/woocommerce).
+Installation instructions are [here](https://support.incomaker.com/en/hc/1609937131/7/woocommerce?category_id=4).
 
 Provides feeds on URL `/wp-json/incomaker/v210/feed/?type=...` and calls Incomaker API on certain actions.
 

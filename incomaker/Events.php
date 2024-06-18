@@ -174,11 +174,13 @@ class Events implements Singletonable
 		$this->incomakerApi->postEvent("register", $contact->getClientContactId(), $permId, $contact->getEmail());
 	}
 
-	public function incomaker_user_login($user)
+	public function incomaker_user_login(string $userLogin)
 	{
+		$user = get_user_by('id', $userLogin);
+		$userId = empty($user) ? null : $user->ID;
 		as_enqueue_async_action(
 			'post_event',
-			array("login", get_userdatabylogin($user)->ID, $this->incomakerApi->getPermId()),
+			array("login", $userId, $this->incomakerApi->getPermId()),
 			EVENT_GROUP_NAME,
 			false,
 			2

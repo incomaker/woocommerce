@@ -22,31 +22,25 @@ namespace Incomaker;
 use SimpleXMLElement;
 use WC_Product;
 
-class OrderExport extends XmlExport
-{
+class OrderExport extends XmlExport {
 
 	public static $name = "order";
 
-	public function __construct()
-	{
-
+	public function __construct() {
 		$this->xml = new SimpleXMLElement('<orders/>');
 		$this->setLimitKey('limit');
 	}
 
-	public function getItemsCount()
-	{
+	public function getItemsCount() {
 		$orders = get_object_vars(wp_count_posts('shop_order'));
 		return $orders["wc-pending"] + $orders["wc-processing"] + $orders["wc-on-hold"] + $orders["wc-completed"] + $orders["wc-cancelled"] + $orders["wc-refunded"] + $orders["wc-failed"];
 	}
 
-	public function getFilteredItems()
-	{
+	public function getFilteredItems() {
 		return wc_get_orders($this->getQuery());
 	}
 
-	protected function createXml($order)
-	{
+	protected function createXml($order) {
 		if (strpos(get_class($order), "OrderRefund") != false) return;
 
 		$childXml = $this->xml->addChild('o');

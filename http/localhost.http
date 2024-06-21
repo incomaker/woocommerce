@@ -1,14 +1,14 @@
-### With pretty URLs
-GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=product&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741
+### products - with pretty URLs
+GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=product&key=34492d88-723e-42c9-9a95-b808deae321c
 
-### Without pretty URLs
+### products - without pretty URLs
 GET http://localhost:8081/?rest_route=/incomaker/v210/feed/&type=product&key=34492d88-723e-42c9-9a95-b808deae321c
 
 ### Coupons
 GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=coupon&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741
 
 ### Orders
-GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=order&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741
+GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=order&key=34492d88-723e-42c9-9a95-b808deae321c
 
 ### Products
 GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=product&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741

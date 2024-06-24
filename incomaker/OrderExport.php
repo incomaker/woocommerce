@@ -44,7 +44,7 @@ class OrderExport extends XmlExport {
 		$class_name = get_class($order);
 		if (strpos($class_name, "OrderRefund") != false) return false;
 		if (strpos($class_name, "WC_Order_Refund") != false) return false;
-		return true;
+		return method_exists($order, 'get_order_number');
 	}
 
 	protected function createXml($order) {

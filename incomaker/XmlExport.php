@@ -112,7 +112,10 @@ abstract class XmlExport {
 
 	public function createXmlFeed() {
 		$this->xml->addAttribute('version', $this::API_VERSION);
-		$this->xml->addAttribute('totalItems', $this->getItemsCount());
+		$count = $this->getItemsCount();
+		if ($count != null) {
+			$this->xml->addAttribute('totalItems', $count);
+		}
 		$this->xml->addAttribute('generator', 'IncomakerWoocommercePlugin:' . $this->getPluginVersion());
 
 		foreach ($this->getFilteredItems() as $item) {

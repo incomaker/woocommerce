@@ -32,16 +32,23 @@ class OrderExport extends XmlExport {
 	}
 
 	public function getItemsCount() {
-		$orders = get_object_vars(wp_count_posts('shop_order'));
-		return $orders["wc-pending"] + $orders["wc-processing"] + $orders["wc-on-hold"] + $orders["wc-completed"] + $orders["wc-cancelled"] + $orders["wc-refunded"] + $orders["wc-failed"];
+		return null;
 	}
 
 	public function getFilteredItems() {
 		return wc_get_orders($this->getQuery());
 	}
 
+	private function isValidOrderClass($order) {
+		if (empty($order)) return false;
+		$class_name = get_class($order);
+		if (strpos($class_name, "OrderRefund") != false) return false;
+		if (strpos($class_name, "WC_Order_Refund") != false) return false;
+		return true;
+	}
+
 	protected function createXml($order) {
-		if (strpos(get_class($order), "OrderRefund") != false) return;
+		if (!$this->isValidOrderClass($order)) return;
 
 		$childXml = $this->xml->addChild('o');
 		$childXml->addAttribute("id", $order->get_order_number());

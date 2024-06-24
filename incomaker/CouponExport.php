@@ -15,10 +15,8 @@ class CouponExport extends XmlExport
 		$this->setLimitKey('numberposts');
 	}
 
-	protected function getItemsCount()
-	{
-		$count = wp_count_posts('shop_coupon');
-		return $count->publish;
+	protected function getItemsCount() {
+		return null;
 	}
 
 	public function getFilteredItems()

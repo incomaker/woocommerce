@@ -34,10 +34,8 @@ class ContactExport extends XmlExport
 		$this->setLimitKey('number');
 	}
 
-	protected function getItemsCount()
-	{
-		$users = count_users();
-		return $users["total_users"];
+	protected function getItemsCount() {
+		return null;
 	}
 
 	public function getFilteredItems()

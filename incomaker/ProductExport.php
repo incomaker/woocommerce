@@ -28,22 +28,19 @@ class ProductExport extends XmlExport
 
 	private $locale;
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->xml = new SimpleXMLElement('<products/>');
 		$this->locale = get_locale();
 		$this->setLimitKey('limit');
 	}
 
-	public function getFilteredItems()
-	{
+	public function getFilteredItems() {
 		return wc_get_products($this->getQuery());
 	}
 
 	private $thisProduct;
 
-	protected function createXml($product)
-	{
+	protected function createXml($product) {
 		$childXml = $this->xml->addChild('p');
 		$childXml->addAttribute("id", $product->get_id() * XmlExport::PRODUCT_ATTRIBUTE);
 		$this->addItem($childXml, 'imageUrl', wp_get_attachment_image_url($product->get_image_id(), 'full'));
@@ -96,10 +93,8 @@ class ProductExport extends XmlExport
 		do_action('incomaker_modify_xml_product_item', $this, $childXml, $product);
 	}
 
-	protected function getItemsCount()
-	{
-		$products = get_object_vars(wp_count_posts('product'));
-		return $products["publish"] + $products["future"] + $products["draft"];
+	protected function getItemsCount() {
+		return null;
 	}
 
 }

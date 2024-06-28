@@ -48,9 +48,15 @@ class OrderExport extends XmlExport {
 	}
 
 	protected function createXml($order) {
-		if (!$this->isValidOrderClass($order)) return;
+        $childXml = $this->xml->addChild('o');
 
-		$childXml = $this->xml->addChild('o');
+        // leave only an empty order tag for invalid orders to keep number of items per page
+        // worker will silently ignore these while paging will still work
+		if (!$this->isValidOrderClass($order)) {
+            $childXml->addAttribute("id", "refund/invalid");
+            return;
+        };
+
 		$childXml->addAttribute("id", $order->get_order_number());
 		if (($order->get_customer_id() == 0) || (is_multisite())) {
 			$contact = $childXml->addChild('contact');

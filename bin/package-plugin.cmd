@@ -1,0 +1,1 @@
+docker run --rm --volume .:/app --workdir /app joshkeegan/zip zip -r incomaker.zip incomaker

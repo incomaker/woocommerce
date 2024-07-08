@@ -37,3 +37,4 @@ services:
       - WORDPRESS_DB_NAME=wordpress
       - WORDPRESS_USERNAME=admin
       - WORDPRESS_PASSWORD=password
+      - WORDPRESS_CONFIG_EXTRA=define('WP_ALLOW_MULTISITE', true );

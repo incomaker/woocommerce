@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 Plugin Name: Incomaker
 Plugin URI: https://www.incomaker.com/woocommerce
 Description: Marketing automation with artificial intelligence
-Version: 2.1.15
+Version: 2.1.16
 Author: Incomaker
 Author URI: https://www.incomaker.com
 License: GPL v3
@@ -38,6 +38,7 @@ use Incomaker\Tracking;
 use Incomaker\Events;
 
 require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 if (!defined('INCOMAKER_MIN_PHP_VERSION')) {
 	define('INCOMAKER_MIN_PHP_VERSION', '5.6.0');
@@ -115,7 +116,7 @@ class Incomaker
 	}
 
 	public static function woocommerce_plugin_active() {
-		return in_array('woocommerce/woocommerce.php', (array)get_option('active_plugins', array()), true);
+		return is_plugin_active('woocommerce/woocommerce.php');
 	}
 
 	public function execute()

@@ -4,7 +4,7 @@ services:
     command: '--default-authentication-plugin=mysql_native_password'
     restart: unless-stopped
     networks:
-      - wordpress-net
+      - internal-net
     env_file:
       - .env
     ports:
@@ -15,6 +15,7 @@ services:
       - db
     image: wordpress:6.5.3
     networks:
+      - internal-net
       - wordpress-net
     ports:
       - 8081:80
@@ -25,6 +26,7 @@ services:
       - VIRTUAL_PORT=8081
 
 networks:
+  internal-net:
   wordpress-net:
     name: ${NETWORK:-wordpress-net}
     external: ${USE_EXTERNAL_NETWORK:-false}

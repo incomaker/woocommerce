@@ -34,3 +34,6 @@ networks:
   wordpress-net:
     name: ${NETWORK:-wordpress-net}
     external: ${USE_EXTERNAL_NETWORK:-false}
+
+volumes:
+  - db-data

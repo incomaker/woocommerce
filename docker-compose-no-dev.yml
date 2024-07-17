@@ -17,7 +17,7 @@ services:
       - db
     image: wordpress:6.5.3
     volumes:
-      - ./.htaccess:/var/www/html/.htaccess
+      - ./docker-files/.htaccess:/var/www/html/.htaccess
     networks:
       - internal-net
       - wordpress-net

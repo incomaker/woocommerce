@@ -21,6 +21,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      - VIRTUAL_PORT=8081
 
 networks:
   wordpress-net:

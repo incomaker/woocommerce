@@ -21,6 +21,6 @@ services:
       - .env
 
 networks:
-  pivo-net:
+  wordpress-net:
     name: ${NETWORK:-wordpress-net}
     external: ${USE_EXTERNAL_NETWORK:-false}

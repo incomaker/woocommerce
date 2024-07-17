@@ -36,4 +36,4 @@ networks:
     external: ${USE_EXTERNAL_NETWORK:-false}
 
 volumes:
-  - db-data:
+  db-data:

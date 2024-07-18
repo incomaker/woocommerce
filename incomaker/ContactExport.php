@@ -40,11 +40,7 @@ class ContactExport extends XmlExport
 
 	public function getFilteredItems()
 	{
-		if (is_multisite()) {
-			return array();
-		} else {
-			return get_users($this->getQuery());
-		}
+		return get_users($this->getQuery());
 	}
 
 	protected function addIfNotEmpty($customer, $childXml, $key, $value)

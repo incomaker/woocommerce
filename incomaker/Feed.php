@@ -50,6 +50,18 @@ class Feed
 	}
 
 	function execute(\WP_REST_Request $request) {
+		$options = get_option("incomaker_option");
+		if (empty($options) || !isset($options['incomaker_api_key'])) {
+			return new \WP_Error("OPTIONSMISSING", "Could not locate Incomaker plugin options! This might happen when plugin is not configured or on multisite installation when using the default endpoint.", array('status' => 403));
+		}
+		$apiKey = $options['incomaker_api_key'];
+		if (strlen($apiKey) === 0) {
+			return new \WP_Error("APIKEYNOTSET", "API key not set! Incomaker API key must be configured on plugin Settings page.", array('status' => 403));
+		}
+		if ($apiKey !== $request->get_param('key')) {
+			return new \WP_Error("APIKEYINVALID", "Invalid API key! Valid Incomaker API key must be configured on plugin Settings page.", array('status' => 401));
+		}
+
 		if (!Incomaker::woocommerce_plugin_active()) {
 			return new \WP_Error("WOO_MISSING", "Incomaker plugin requires WooCommerce plugin to generate XML feeds!", array('status' => 500));
 		}
@@ -58,13 +70,6 @@ class Feed
 			if ($xmlExport == NULL) throw new BadFunctionCallException();
 		} catch (Exception $e) {
 			return new \WP_Error("UNKNOWNTYPE", "Unknown feed type! Use URL query to specify feed type (product, contact, category, order or coupon).", array('status' => 400));
-		}
-		$apiKey = get_option("incomaker_option")['incomaker_api_key'];
-		if (strlen($apiKey) === 0) {
-			return new \WP_Error("APIKEYNOTSET", "API key not set! Incomaker API key must be configured on plugin Settings page.", array('status' => 403));
-		}
-		if ($apiKey !== $request->get_param('key')) {
-			return new \WP_Error("APIKEYINVALID", "Invalid API key! Valid Incomaker API key must be configured on plugin Settings page.", array('status' => 401));
 		}
 
 		try {

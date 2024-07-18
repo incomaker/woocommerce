@@ -35,6 +35,30 @@ You will have to change permalinks settings (http://localhost:8081/wp-admin/opti
 Without pretty links:
 `http://localhost:8081/?rest_route=/incomaker/v210/feed/&type=product&key=312e57de-f7e9-4d9a-a3a5-c5a5b455a741`
 
+### Multisite install
+
+First, set up Wordpress basic installation with following value in `.env` file:
+
+    WORDPRESS_CONFIG_EXTRA=define('WP_ALLOW_MULTISITE', true );
+
+Then, stop the container and change `.env` to look like this:
+
+```
+WORDPRESS_CONFIG_EXTRA="
+    define( 'WP_ALLOW_MULTISITE', true );
+    define( 'MULTISITE', true );
+    define( 'SUBDOMAIN_INSTALL', false );
+    define( 'DOMAIN_CURRENT_SITE', 'wordpress.test.incomaker.com' );
+    define( 'PATH_CURRENT_SITE', '/' );
+    define( 'SITE_ID_CURRENT_SITE', 1 );
+    define( 'BLOG_ID_CURRENT_SITE', 1 );
+"
+```
+
+Now, restart Wordpress container and multisite is active.
+
+Global configuration, like plugin installation, must be done via ***My sites / Network Admin***.
+
 ### Wordpress v. 5.7
 
 Description above is only valid for WordPress v. 6.2 and newer. To use version 5.7 you will have to download, install and activate Woo Commerce plugin manually.

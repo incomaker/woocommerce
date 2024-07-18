@@ -5,10 +5,22 @@ GET http://wordpress.test.incomaker.com/wp-json/incomaker/v210/feed/?type=produc
 GET http://wordpress.test.incomaker.com/?rest_route=/incomaker/v210/feed/&type=product&key=34492d88-723e-42c9-9a95-b808deae321c
 
 ### Coupons
-GET http://wordpress.test.incomaker.com/wp-json/incomaker/v210/feed/?type=coupon&key=34492d88-723e-42c9-9a95-b808deae321c
+GET http://wordpress.test.incomaker.com/cs/wp-json/incomaker/v210/feed/?type=coupon&key=34492d88-723e-42c9-9a95-b808deae321c
 
-### Orders
-GET http://wordpress.test.incomaker.com/wp-json/incomaker/v210/feed/?type=order&key=34492d88-723e-42c9-9a95-b808deae321c
+### Orders - cs
+GET http://wordpress.test.incomaker.com/cs/wp-json/incomaker/v210/feed/?type=order&key=34492d88-723e-42c9-9a95-b808deae321c
 
-### Products
-GET http://wordpress.test.incomaker.com/wp-json/incomaker/v210/feed/?type=product&key=34492d88-723e-42c9-9a95-b808deae321c
+### Orders - en
+GET http://wordpress.test.incomaker.com/en/wp-json/incomaker/v210/feed/?type=order&key=34492d88-723e-42c9-9a95-b808deae321c
+
+### Products - cs
+GET http://wordpress.test.incomaker.com/cs/wp-json/incomaker/v210/feed/?type=product&key=34492d88-723e-42c9-9a95-b808deae321c
+
+### Products - en
+GET http://wordpress.test.incomaker.com/en/wp-json/incomaker/v210/feed/?type=product&key=34492d88-723e-42c9-9a95-b808deae321c
+
+### Contacts - cs
+GET http://wordpress.test.incomaker.com/cs/wp-json/incomaker/v210/feed/?type=contact&key=34492d88-723e-42c9-9a95-b808deae321c
+
+### Contacts - en
+GET http://wordpress.test.incomaker.com/en/wp-json/incomaker/v210/feed/?type=contact&key=34492d88-723e-42c9-9a95-b808deae321c

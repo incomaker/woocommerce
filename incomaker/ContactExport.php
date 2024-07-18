@@ -40,7 +40,14 @@ class ContactExport extends XmlExport
 
 	public function getFilteredItems()
 	{
-		return get_users($this->getQuery());
+		// in multisite mode, customers are mixed and all sites return the same customer list
+		// to separate them, we dont send any customers to contact feed, but instead include contact details inside each order
+
+		if (is_multisite()) {
+			return array();
+		} else {
+			return get_users($this->getQuery());
+		}
 	}
 
 	protected function addIfNotEmpty($customer, $childXml, $key, $value)

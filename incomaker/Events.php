@@ -27,10 +27,8 @@ class Events implements Singletonable
 {
 	private $incomakerApi;
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->incomakerApi = new IncomakerApi();
-
 		add_action('user_register', array($this, 'incomaker_user_register'), 1, 1);
 		add_filter('profile_update', array($this, 'incomaker_profile_update'), 2, 2);
 		add_action('wp_login', array($this, 'incomaker_user_login'));
@@ -51,9 +49,7 @@ class Events implements Singletonable
 		return sanitize_text_field(strval($_POST[$key]));
 	}
 
-	public function incomaker_order_add($order_id)
-	{
-
+	public function incomaker_order_add($order_id) {
 		$order = new \WC_Order($order_id);
 		if ($order->get_user_id() == 0) {
 			$this->incomaker_user_register(null);
@@ -74,18 +70,16 @@ class Events implements Singletonable
 		);
 
 		$this->sessionStart();
-		WC()->session->__unset('old_cart');
+		WC()->session->set('old_cart', null);
 	}
 
-	protected function sessionStart()
-	{
+	protected function sessionStart() {
 		if (isset(WC()->session) && !WC()->session->has_session()) {
 			WC()->session->set_customer_session_cookie(true);
 		}
 	}
 
-	public function incomaker_add_to_cart()
-	{
+	public function incomaker_add_to_cart() {
 		$this->sessionStart();
 		$customer_id = get_current_user_id();
 		if ($customer_id == 0) {
@@ -125,8 +119,7 @@ class Events implements Singletonable
 		WC()->session->set('old_cart', serialize($new));
 	}
 
-	public function incomaker_profile_update($user_id, $customer)
-	{
+	public function incomaker_profile_update($user_id, $customer) {
 		as_enqueue_async_action(
 			'update',
 			array($user_id, $customer, $this->incomakerApi->getPermId()),
@@ -136,15 +129,13 @@ class Events implements Singletonable
 		);
 	}
 
-	public function incomaker_async_update($user_id, $customer, $permId)
-	{
+	public function incomaker_async_update($user_id, $customer, $permId) {
 		$customer = new \WC_Customer($user_id);
 		$this->incomakerApi->updateContact($user_id, $customer, $permId);
 		$this->incomakerApi->postEvent("contact_update", $user_id, $permId);
 	}
 
-	public function incomaker_user_register($user_id)
-	{
+	public function incomaker_user_register($user_id) {
 		$contact = new \Incomaker\Api\Data\Contact($user_id);
 		$contact->setEmail(sanitize_email($this->getSanitizedPost('billing_email')));
 		$contact->setFirstName($this->getSanitizedPost('billing_first_name'));
@@ -166,16 +157,14 @@ class Events implements Singletonable
 		);
 	}
 
-	public function incomaker_async_register($contact, $permId)
-	{
+	public function incomaker_async_register($contact, $permId) {
 		$contact = unserialize($contact);
 
 		$this->incomakerApi->addContact($contact, $permId);
 		$this->incomakerApi->postEvent("register", $contact->getClientContactId(), $permId, $contact->getEmail());
 	}
 
-	public function incomaker_user_login(string $userLogin)
-	{
+	public function incomaker_user_login(string $userLogin) {
 		$user = get_user_by('id', $userLogin);
 		$userId = empty($user) ? null : $user->ID;
 		as_enqueue_async_action(
@@ -187,23 +176,19 @@ class Events implements Singletonable
 		);
 	}
 
-	public function incomaker_async_post_event($event, $param, $permId)
-	{
+	public function incomaker_async_post_event($event, $param, $permId) {
 		$this->incomakerApi->postEvent($event, $param, $permId);
 	}
 
-	public function incomaker_async_post_product_event($event, $customer_id, $product, $sessionId, $permId)
-	{
+	public function incomaker_async_post_product_event($event, $customer_id, $product, $sessionId, $permId) {
 		$this->incomakerApi->postProductEvent($event, $customer_id, $product, $sessionId, $permId);
 	}
 
-	public function incomaker_async_post_order_event($event, $customer_id, $order_id, $sessionId, $permId, $contactEmail)
-	{
+	public function incomaker_async_post_order_event($event, $customer_id, $order_id, $sessionId, $permId, $contactEmail) {
 		$this->incomakerApi->postOrderEvent($event, $customer_id, $order_id, $sessionId, $permId, $contactEmail);
 	}
 
-	public function incomaker_user_logout($user_id)
-	{
+	public function incomaker_user_logout($user_id) {
 		as_enqueue_async_action(
 			'post_event',
 			array("logout", $user_id, $this->incomakerApi->getPermId()),
@@ -215,8 +200,7 @@ class Events implements Singletonable
 
 	private static $singleton = null;
 
-	public static function getInstance()
-	{
+	public static function getInstance() {
 		if (self::$singleton == null) {
 			self::$singleton = new Events();
 		}

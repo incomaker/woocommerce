@@ -34,6 +34,10 @@ class ProductExport extends XmlExport
 		$this->setLimitKey('limit');
 	}
 
+	public function getLang() {
+		return $this->shortLang($this->locale);
+	}
+
 	public function getFilteredItems() {
 		return wc_get_products($this->getQuery());
 	}
@@ -64,6 +68,7 @@ class ProductExport extends XmlExport
 		foreach ($product->get_tag_ids() as $value) {
 			$tagsXml->addChild('t', get_term($value)->name);
 		}
+		$tagsXml->addChild('t', $this->getLang());
 
 		$this->addItem($childXml, 'stock', $product->get_stock_quantity());
 		$this->addItem($childXml, 'choiceFlag', $product->get_featured() ? 1 : 0);
@@ -72,7 +77,7 @@ class ProductExport extends XmlExport
 
 		$languagesXml = $childXml->addChild('languages');
 		$lXml = $languagesXml->addChild('l');
-		$lXml->addAttribute("id", $this->shortLang($this->locale));
+		$lXml->addAttribute("id", $this->getLang());
 		$this->addItem($lXml, "name", self::removeXmlInvalidChars($product->get_name()));
 		$this->addItem($lXml, "description", self::removeXmlInvalidChars($product->get_description()));
 		$this->addItem($lXml, "shortDescription", self::removeXmlInvalidChars($product->get_short_description()));

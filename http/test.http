@@ -13,6 +13,9 @@ GET http://wordpress.test.incomaker.com/cs/wp-json/incomaker/v210/feed/?type=ord
 ### Orders - en
 GET http://wordpress.test.incomaker.com/en/wp-json/incomaker/v210/feed/?type=order&key=34492d88-723e-42c9-9a95-b808deae321c
 
+### Products - main
+GET http://wordpress.test.incomaker.com/wp-json/incomaker/v210/feed/?type=product&key=34492d88-723e-42c9-9a95-b808deae321c
+
 ### Products - cs
 GET http://wordpress.test.incomaker.com/cs/wp-json/incomaker/v210/feed/?type=product&key=34492d88-723e-42c9-9a95-b808deae321c
 

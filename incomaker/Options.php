@@ -26,15 +26,13 @@ class Options implements Singletonable
 
 	private $incomaker_options;
 
-	public function __construct()
-	{
+	public function __construct() {
 		add_action('admin_menu', array($this, 'incomaker_add_plugin_page'));
 		add_action('admin_init', array($this, 'incomaker_page_init'));
 		add_filter('plugin_action_links_incomaker/incomaker.php', array($this, 'add_action_links'));
 	}
 
-	public function incomaker_add_plugin_page()
-	{
+	public function incomaker_add_plugin_page() {
 		add_options_page(
 			'Incomaker', // page_title
 			'Incomaker', // menu_title
@@ -44,18 +42,15 @@ class Options implements Singletonable
 		);
 	}
 
-	public function valExists($key)
-	{
+	public function optionExists($key) {
 		return !empty($this->incomaker_options[$key]);
 	}
 
-	public function getVal($key, $default = '')
-	{
-		return $this->valExists($key) ? esc_attr($this->incomaker_options[$key]) : $default;
+	public function getOption($key, $default = '') {
+		return $this->optionExists($key) ? esc_attr($this->incomaker_options[$key]) : $default;
 	}
 
-	public function incomaker_create_admin_page()
-	{
+	public function incomaker_create_admin_page() {
 		if (!Incomaker::woocommerce_plugin_active()) {
 			?>
 			<div class="notice notice-warning">
@@ -74,24 +69,22 @@ class Options implements Singletonable
 
 			<form method="post" action="options.php">
 				<?php
-				settings_fields('incomaker_option_group');
-				do_settings_sections('incomaker-admin');
-				submit_button();
+					settings_fields('incomaker_option_group');
+					do_settings_sections('incomaker-admin');
+					submit_button();
 				?>
 			</form>
 		</div>
 	<?php }
 
-	public function add_action_links($links)
-	{
+	public function add_action_links($links) {
 		$after = array(
 			'settings' => sprintf('<a href="%s">%s</a>', admin_url('options-general.php?page=incomaker'), __('Settings', 'incomaker')),
 		);
 		return array_merge($links, $after);
 	}
 
-	public function incomaker_page_init()
-	{
+	public function incomaker_page_init() {
 		register_setting(
 			'incomaker_option_group', // option_group
 			'incomaker_option', // option_name
@@ -133,9 +126,8 @@ class Options implements Singletonable
 		);
 	}
 
-	public function incomaker_sanitize($input)
-	{
-		$keyOld = $this->getVal('incomaker_api_key');
+	public function incomaker_sanitize($input) {
+		$keyOld = $this->getOption('incomaker_api_key');
 
 		$sanitary_values = array();
 		if (isset($input['incomaker_api_key'])) {
@@ -143,7 +135,7 @@ class Options implements Singletonable
 		}
 
 		$keyNew = $sanitary_values['incomaker_api_key'];
-		$valuesSet = $this->valExists('incomaker_account_id') && $this->valExists('incomaker_plugin_id');
+		$valuesSet = $this->optionExists('incomaker_account_id') && $this->optionExists('incomaker_plugin_id');
 
 		if (empty($keyNew)) {
 			$sanitary_values['incomaker_account_id'] = '';
@@ -162,9 +154,8 @@ class Options implements Singletonable
 	{
 	}
 
-	public function incomaker_api_key_callback()
-	{
-		$value = $this->getVal('incomaker_api_key');
+	public function incomaker_api_key_callback() {
+		$value = $this->getOption('incomaker_api_key');
 		?>
 			<input class="regular-text" type="text" name="incomaker_option[incomaker_api_key]" id="incomaker_api_key" value="<?php echo esc_attr($value) ?>">
 			<p>When proper API Key is set, data from your e-shop will be shared with Incomaker.</p>
@@ -173,17 +164,15 @@ class Options implements Singletonable
 		<?php
 	}
 
-	public function incomaker_account_id_callback()
-	{
-		$value = $this->getVal('incomaker_account_id');
+	public function incomaker_account_id_callback() {
+		$value = $this->getOption('incomaker_account_id');
 		?>
 			<input class="regular-text" type="text" name="incomaker_option[incomaker_account_id]" id="incomaker_account_id" value="<?php echo esc_attr($value) ?>" disabled>
 		<?php
 	}
 
-	public function incomaker_plugin_id_callback()
-	{
-		$value = $this->getVal('incomaker_plugin_id');
+	public function incomaker_plugin_id_callback() {
+		$value = $this->getOption('incomaker_plugin_id');
 		?>
 			<input class="regular-text" type="text" name="incomaker_option[incomaker_plugin_id]" id="incomaker_plugin_id" value="<?php echo esc_attr($value) ?>" disabled>
 		<?php
@@ -191,8 +180,7 @@ class Options implements Singletonable
 
 	private static $singleton = null;
 
-	public static function getInstance()
-	{
+	public static function getInstance() {
 		if ((self::$singleton == null) && (is_admin())) {
 			self::$singleton = new Options();
 		}

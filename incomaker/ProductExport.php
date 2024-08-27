@@ -52,9 +52,9 @@ class ProductExport extends XmlExport
 		$pXml = $pricesXml->addChild('p');
 		$pXml->addAttribute("currency", get_woocommerce_currency());
 
-		$regular_price = $product->get_regular_price();
-		$sale_price = $product->get_sale_price();
-		$price = $product->get_price();
+		$regular_price = wc_get_price_including_tax($product, ['price' => $product->get_regular_price()]);
+		$sale_price = wc_get_price_including_tax($product, ['price' => $product->get_sale_price()]);
+		$price = wc_get_price_including_tax($product);
 		$this->addItem($pXml, "amount", $regular_price == "" ? $price : $regular_price);
 		if ($regular_price !== $sale_price && $sale_price === $price) {
 			$this->addItem($pXml, "priceAfterDiscount", $sale_price);

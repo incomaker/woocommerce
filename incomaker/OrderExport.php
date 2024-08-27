@@ -48,14 +48,14 @@ class OrderExport extends XmlExport {
 	}
 
 	protected function createXml($order) {
-        $childXml = $this->xml->addChild('o');
+		$childXml = $this->xml->addChild('o');
 
-        // leave only an empty order tag for invalid orders to keep number of items per page
-        // worker will silently ignore these while paging will still work
+		// leave only an empty order tag for invalid orders to keep number of items per page
+		// worker will silently ignore these while paging will still work
 		if (!$this->isValidOrderClass($order)) {
-            $childXml->addAttribute("id", "refund/invalid");
-            return;
-        };
+			$childXml->addAttribute("id", "refund/invalid");
+			return;
+		};
 
 		$childXml->addAttribute("id", $order->get_order_number());
 		if (($order->get_customer_id() == 0) || (is_multisite())) {
@@ -84,16 +84,14 @@ class OrderExport extends XmlExport {
 				$item = $items->addChild('i');
 				$item->addAttribute("id", $itm->get_product_id() * XmlExport::PRODUCT_ATTRIBUTE + $itm->get_variation_id());
 				$this->addItem($item, "quantity", $itm->get_quantity());
-				$product = $itm->get_product();
-				if ($product instanceof WC_Product) {
-					$price = $this->addItem($item, "price", wc_get_price_including_tax($product));
-					$price->addAttribute("currency", $order->get_currency());
-					$priceWithoutTax = $this->addItem($item, "priceWithoutTax", wc_get_price_excluding_tax($product));
-					$priceWithoutTax->addAttribute("currency", $order->get_currency());
-				} else {
-					$price = $this->addItem($item, "price", 0);
-					$price->addAttribute("currency", get_woocommerce_currency());
-				}
+				$item_actual_qty = empty($itm->get_quantity()) ? 1 : $itm->get_quantity();
+				$unit_price_without_tax = $itm->get_total() / $item_actual_qty;
+				$unit_tax = $itm->get_total_tax() / $item_actual_qty;
+				$unit_price_with_tax = $unit_price_without_tax + $unit_tax;
+				$price = $this->addItem($item, "price", $unit_price_with_tax);
+				$price->addAttribute("currency", $order->get_currency());
+				$priceWithoutTax = $this->addItem($item, "priceWithoutTax", $unit_price_without_tax);
+				$priceWithoutTax->addAttribute("currency", $order->get_currency());
 			}
 		}
 

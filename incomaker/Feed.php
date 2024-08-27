@@ -37,8 +37,7 @@ class Feed
 	const ROUTE = 'incomaker/v210';
 	const COMMAND = '/feed';
 
-	public function registerRoutes()
-	{
+	public function registerRoutes() {
 		register_rest_route(Feed::ROUTE, Feed::COMMAND, array(
 				array(
 					'methods' => array('GET'),
@@ -71,6 +70,12 @@ class Feed
 		} catch (Exception $e) {
 			return new \WP_Error("UNKNOWNTYPE", "Unknown feed type! Use URL query to specify feed type (product, contact, category, order or coupon).", array('status' => 400));
 		}
+
+		// EXPERIMENTAL: Support for Aelia Currency Switcher
+		add_filter('wc_aelia_cs_selected_currency', function($selected_currency) {
+			// bypass geolocation-based currency selection and always use the default currency
+			return get_woocommerce_currency();
+		}, 10);
 
 		try {
 			$xmlExport->setLimit($request->get_param('limit'));

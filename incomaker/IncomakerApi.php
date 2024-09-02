@@ -35,9 +35,7 @@ class IncomakerApi
 		return $this->getSanitizedCookie('inco_session_temp_browser', '');
 	}
 
-	public function postProductEvent($event, $customer, $product, $session, $permId)
-	{
-
+	public function postProductEvent($event, $customer, $product, $session, $permId) {
 		$event = new \Incomaker\Api\Data\Event($event, $permId);
 
 		if (isset($customer)) {

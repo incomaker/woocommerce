@@ -23,8 +23,8 @@ require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.ph
 
 const EVENT_GROUP_NAME = 'incomaker-sync-events';
 
-class Events implements Singletonable
-{
+class Events implements Singletonable {
+
 	private $incomakerApi;
 
 	public function __construct() {
@@ -42,6 +42,9 @@ class Events implements Singletonable
 		add_action('update', array($this, 'incomaker_async_update'), 3, 3);
 		add_action('post_product_event', array($this, 'incomaker_async_post_product_event'), 10, 5);
 		add_action('post_order_event', array($this, 'incomaker_async_post_order_event'), 10, 6);
+
+		add_action('deleted_post', array($this, 'incomaker_product_deleted'), 10, 1 );
+		add_action('wp_trash_post', array($this, 'incomaker_product_deleted'), 10, 1 );
 	}
 
 	private function getSanitizedPost($key) {
@@ -196,6 +199,18 @@ class Events implements Singletonable
 			false,
 			15
 		);
+	}
+
+	function incomaker_product_deleted($post_id) {
+		if (get_post_type($post_id) === 'product') {
+			as_enqueue_async_action(
+				'post_product_event',
+				array('product_delete', 0, $post_id, null, null),
+				EVENT_GROUP_NAME,
+				false,
+				5
+			);
+		}
 	}
 
 	private static $singleton = null;

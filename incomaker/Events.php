@@ -205,7 +205,7 @@ class Events implements Singletonable {
 		if (get_post_type($post_id) === 'product') {
 			as_enqueue_async_action(
 				'post_product_event',
-				array('product_delete', 0, $post_id, null, null),
+				array('product_delete', 0, $post_id * XmlExport::PRODUCT_ATTRIBUTE, null, null),
 				EVENT_GROUP_NAME,
 				false,
 				5

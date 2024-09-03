@@ -47,7 +47,10 @@ class ProductExport extends XmlExport
 	protected function createXml($product) {
 		$childXml = $this->xml->addChild('p');
 		$childXml->addAttribute("id", $product->get_id() * XmlExport::PRODUCT_ATTRIBUTE);
-		$this->addItem($childXml, 'imageUrl', wp_get_attachment_image_url($product->get_image_id(), 'full'));
+		$imageUrl = wp_get_attachment_image_url($product->get_image_id(), 'full');
+		if (!empty($imageUrl)) {
+			$this->addItem($childXml, 'imageUrl', $imageUrl);
+		}
 		$categoriesXml = $childXml->addChild('categories');
 		foreach ($product->get_category_ids() as $value) {
 			$categoriesXml->addChild('c', $value);
@@ -83,16 +86,19 @@ class ProductExport extends XmlExport
 		$this->addItem($lXml, "shortDescription", self::removeXmlInvalidChars($product->get_short_description()));
 		$this->addItem($lXml, 'url', get_permalink($product->get_id()));
 
-		$attributesXml = $childXml->addChild('attributes');
-		foreach ($product->get_attributes() as $value) {
-			$attrId = $value->get_taxonomy();
-			if ((($value->get_terms() != null) && current($value->get_terms())) != false) {
-				$attrVal = current($value->get_terms())->name;
+		$attributes = $product->get_attributes();
+		if (!empty($attributes)) {
+			$attributesXml = $childXml->addChild('attributes');
+			foreach ($attributes as $attribute) {
+				$attribute_values = $attribute->is_taxonomy() ? wc_get_product_terms($product->get_id(), $attribute->get_name(), array('fields' => 'names')) : $attribute->get_options();
+				foreach ($attribute_values as $value) {
+					$aXml = $attributesXml->addChild('a', $value);
+					$aXml->addAttribute("key", wc_attribute_label($attribute->get_name()));
+					$tagsXml->addChild('t', $value); //use attributes as tags as well
+				}
 			}
-			$aXml = $attributesXml->addChild('a', $attrVal);
-			$tagsXml->addChild('t', $attrVal);    //use attributes as tags as well
-			$aXml->addAttribute("id", $attrId);
 		}
+
 		$this->addItem($childXml, 'productId', $product->get_id());
 
 		do_action('incomaker_modify_xml_product_item', $this, $childXml, $product);

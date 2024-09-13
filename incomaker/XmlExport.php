@@ -11,7 +11,7 @@ abstract class XmlExport {
 
 	const MAX_LIMIT = 1000;
 
-	const API_VERSION = "2.18";
+	const API_VERSION = "2.19";
 
 	public static $name;
 

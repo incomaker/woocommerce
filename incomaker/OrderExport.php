@@ -55,11 +55,14 @@ class OrderExport extends XmlExport {
 		if (!$this->isValidOrderClass($order)) {
 			$childXml->addAttribute("id", "refund/invalid");
 			return;
-		};
+		}
 
 		$childXml->addAttribute("id", $order->get_order_number());
 		if (($order->get_customer_id() == 0) || (is_multisite())) {
 			$contact = $childXml->addChild('contact');
+			if ($order->get_customer_id() > 0) {
+				$contact->addAttribute("id", $order->get_customer_id());
+			}
 			$this->addItem($contact, 'firstName', htmlspecialchars($order->get_billing_first_name()));
 			$this->addItem($contact, 'lastName', htmlspecialchars($order->get_billing_last_name()));
 			$this->addItem($contact, 'email', $order->get_billing_email());

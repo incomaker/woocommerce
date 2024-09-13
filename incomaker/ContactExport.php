@@ -55,32 +55,34 @@ class ContactExport extends XmlExport
 		if (!empty(trim($value))) $this->addItem($childXml, $key, $value);
 	}
 
-	protected function createXml(WP_User $customer)
-	{
-
+	protected function createXml(WP_User $customer) {
 		$custom = new WC_Customer($customer->ID);
+		$childXml = $this->xml->addChild('c');
 
-		if (isset($custom) && !empty($custom->get_billing_email())) {
+		// leave only an empty tag for invalid customers to keep number of items per page
+		// worker will silently ignore these while paging will still work
+		if (empty($custom) || empty($custom->get_billing_email())) {
+			$this->addItem($childXml, 'remarks', 'Customer has no email or is invalid for another reason.');
+			return;
+		};
 
-			$childXml = $this->xml->addChild('c');
-			$childXml->addAttribute("id", esc_xml($customer->data->ID));
+		$childXml->addAttribute("id", esc_xml($customer->data->ID));
 
-			$userLocale = $this->getUserLocale($customer->data->ID);
-			if (!empty($userLocale)) {
-				$this->addItem($childXml, 'language', esc_xml($this->shortLang($userLocale)));
-			}
-			$this->addIfNotEmpty($custom, $childXml, 'firstName', esc_xml($custom->get_billing_first_name()));
-			$this->addIfNotEmpty($custom, $childXml, 'lastName', esc_xml($custom->get_billing_last_name()));
-			$this->addIfNotEmpty($custom, $childXml, 'email', esc_xml($custom->get_billing_email()));
-			$this->addIfNotEmpty($custom, $childXml, 'street', esc_xml($custom->get_billing_address_1()));
-			$this->addIfNotEmpty($custom, $childXml, 'city', esc_xml($custom->get_billing_city()));
-			$this->addIfNotEmpty($custom, $childXml, 'zipCode', esc_xml($custom->get_billing_postcode()));
-			$this->addIfNotEmpty($custom, $childXml, 'phoneNumber1', esc_xml($custom->get_billing_phone()));
-			$this->addIfNotEmpty($custom, $childXml, 'country', esc_xml(strtolower($custom->get_billing_country())));
-			$this->addIfNotEmpty($custom, $childXml, 'companyName', esc_xml($custom->get_billing_company()));
-			$this->addItem($childXml, 'consentTitle', 'Woocommerce');
-
-			do_action('incomaker_modify_xml_contact_item', $this, $childXml, $custom);
+		$userLocale = $this->getUserLocale($customer->data->ID);
+		if (!empty($userLocale)) {
+			$this->addItem($childXml, 'language', esc_xml($this->shortLang($userLocale)));
 		}
+		$this->addIfNotEmpty($custom, $childXml, 'firstName', esc_xml($custom->get_billing_first_name()));
+		$this->addIfNotEmpty($custom, $childXml, 'lastName', esc_xml($custom->get_billing_last_name()));
+		$this->addIfNotEmpty($custom, $childXml, 'email', esc_xml($custom->get_billing_email()));
+		$this->addIfNotEmpty($custom, $childXml, 'street', esc_xml($custom->get_billing_address_1()));
+		$this->addIfNotEmpty($custom, $childXml, 'city', esc_xml($custom->get_billing_city()));
+		$this->addIfNotEmpty($custom, $childXml, 'zipCode', esc_xml($custom->get_billing_postcode()));
+		$this->addIfNotEmpty($custom, $childXml, 'phoneNumber1', esc_xml($custom->get_billing_phone()));
+		$this->addIfNotEmpty($custom, $childXml, 'country', esc_xml(strtolower($custom->get_billing_country())));
+		$this->addIfNotEmpty($custom, $childXml, 'companyName', esc_xml($custom->get_billing_company()));
+		$this->addItem($childXml, 'consentTitle', 'Woocommerce');
+
+		do_action('incomaker_modify_xml_contact_item', $this, $childXml, $custom);
 	}
 }

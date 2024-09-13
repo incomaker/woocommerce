@@ -12,3 +12,6 @@ GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=order&key=34492d88-7
 
 ### Products
 GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=product&key=34492d88-723e-42c9-9a95-b808deae321c
+
+### Contacts
+GET http://localhost:8081/wp-json/incomaker/v210/feed/?type=contact&key=34492d88-723e-42c9-9a95-b808deae321c

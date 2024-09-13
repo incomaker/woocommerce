@@ -22,12 +22,10 @@ services:
       - internal-net
       - wordpress-net
     ports:
-      - 8081:80
+      - ${VIRTUAL_PORT}:80
     restart: unless-stopped
     env_file:
       - .env
-    environment:
-      - VIRTUAL_PORT=8081
 
 networks:
   internal-net:

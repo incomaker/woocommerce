@@ -10,10 +10,30 @@ class IncomakerApi
 	private $contactController;
 	private $eventController;
 	private $pluginController;
+	private $productController;
 
-	public function __construct($apiKey = null)
-	{
+	public function __construct($apiKey = null) {
 		$this->incomaker = new \Incomaker\Api\Connector(new IncomakerDriver($apiKey));
+	}
+
+	/**
+	 * @return Api\Controller\PluginController
+	 */
+	private function getPluginController() {
+		if (!isset($this->pluginController)) {
+			$this->pluginController = $this->incomaker->createPluginController();
+		}
+		return $this->pluginController;
+	}
+
+	/**
+	 * @return Api\Controller\ProductController
+	 */
+	private function getProductController() {
+		if (!isset($this->productController)) {
+			$this->productController = $this->incomaker->createProductController();
+		}
+		return $this->productController;
 	}
 
 	private function getSanitizedCookie($key, $default = null) {
@@ -112,8 +132,7 @@ class IncomakerApi
 
 	}
 
-	public function addContact($contact, $permId)
-	{
+	public function addContact($contact, $permId) {
 		if (!isset($this->contactController)) {
 			$this->contactController = $this->incomaker->createContactController();
 		}
@@ -122,15 +141,8 @@ class IncomakerApi
 
 	}
 
-	/**
-	 * @return Api\Controller\PluginController
-	 */
-	private function getPluginController()
-	{
-		if (!isset($this->pluginController)) {
-			$this->pluginController = $this->incomaker->createPluginController();
-		}
-		return $this->pluginController;
+	public function sendProductDelete($variantId) {
+		$this->getProductController()->deleteProduct($variantId);
 	}
 
 	/**
@@ -138,10 +150,7 @@ class IncomakerApi
 	 *
 	 * @return Object { accountUuid; pluginUuid; }
 	 */
-	public function getPluginInfo()
-	{
-		return $this
-			->getPluginController()
-			->getInfo();
+	public function getPluginInfo() {
+		return $this->getPluginController()->getInfo();
 	}
 }

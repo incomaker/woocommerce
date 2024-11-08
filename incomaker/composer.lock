@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e43e408430da25fce87236b03cfe3723",
+    "content-hash": "d2431d425acfa08f85f442eb23f07224",
     "packages": [
         {
             "name": "incomaker/api",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/incomaker/api.git",
-                "reference": "1699cf4c205c97569172838cff2df728eed0a2ac"
+                "reference": "483d2ad167abfa271bfc772488b8e08683094a3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/incomaker/api/zipball/1699cf4c205c97569172838cff2df728eed0a2ac",
-                "reference": "1699cf4c205c97569172838cff2df728eed0a2ac",
+                "url": "https://api.github.com/repos/incomaker/api/zipball/483d2ad167abfa271bfc772488b8e08683094a3a",
+                "reference": "483d2ad167abfa271bfc772488b8e08683094a3a",
                 "shasum": ""
             },
             "require": {
@@ -43,26 +43,26 @@
             "description": "Incomaker API library",
             "support": {
                 "issues": "https://github.com/incomaker/api/issues",
-                "source": "https://github.com/incomaker/api/tree/3.2.0"
+                "source": "https://github.com/incomaker/api/tree/3.2.1"
             },
-            "time": "2023-10-20T13:24:10+00:00"
+            "time": "2024-11-08T17:17:51+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",
-            "version": "3.7.4",
+            "version": "3.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woocommerce/action-scheduler.git",
-                "reference": "5fb655253dc004bb7a6d840da807f0949aea8bcd"
+                "reference": "2bc91d88fdbc2c07ab899cbb56b983e11e62cf69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/5fb655253dc004bb7a6d840da807f0949aea8bcd",
-                "reference": "5fb655253dc004bb7a6d840da807f0949aea8bcd",
+                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/2bc91d88fdbc2c07ab899cbb56b983e11e62cf69",
+                "reference": "2bc91d88fdbc2c07ab899cbb56b983e11e62cf69",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6"
+                "php": ">=7.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7.5",
@@ -86,9 +86,9 @@
             "homepage": "https://actionscheduler.org/",
             "support": {
                 "issues": "https://github.com/woocommerce/action-scheduler/issues",
-                "source": "https://github.com/woocommerce/action-scheduler/tree/3.7.4"
+                "source": "https://github.com/woocommerce/action-scheduler/tree/3.8.2"
             },
-            "time": "2024-04-05T14:42:07+00:00"
+            "time": "2024-09-12T23:12:58+00:00"
         }
     ],
     "packages-dev": [],

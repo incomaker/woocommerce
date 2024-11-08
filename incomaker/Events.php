@@ -42,6 +42,7 @@ class Events implements Singletonable {
 		add_action('update', array($this, 'incomaker_async_update'), 3, 3);
 		add_action('post_product_event', array($this, 'incomaker_async_post_product_event'), 10, 5);
 		add_action('post_order_event', array($this, 'incomaker_async_post_order_event'), 10, 6);
+		add_action('send_product_delete', array($this, 'incomaker_async_send_product_delete'), 10, 6);
 
 		add_action('deleted_post', array($this, 'incomaker_product_deleted'), 10, 1 );
 		add_action('wp_trash_post', array($this, 'incomaker_product_deleted'), 10, 1 );
@@ -203,14 +204,19 @@ class Events implements Singletonable {
 
 	function incomaker_product_deleted($post_id) {
 		if (get_post_type($post_id) === 'product') {
+			$variantId = $post_id * XmlExport::PRODUCT_ATTRIBUTE;
 			as_enqueue_async_action(
-				'post_product_event',
-				array('product_delete', 0, $post_id * XmlExport::PRODUCT_ATTRIBUTE, null, null),
+				'send_product_delete',
+				array($variantId),
 				EVENT_GROUP_NAME,
 				false,
 				5
 			);
 		}
+	}
+
+	public function incomaker_async_send_product_delete($variantId) {
+		$this->incomakerApi->sendProductDelete($variantId);
 	}
 
 	private static $singleton = null;

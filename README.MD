@@ -8,6 +8,8 @@ Provides feeds on URL `/wp-json/incomaker/v210/feed/?type=...` and calls Incomak
 
 ## Run and Debug in Docker
 
+Run `bin/composer-install` to create and update `vendor` folder.
+
 Start Docker container:
 
     bin/start-dev
@@ -16,7 +18,7 @@ First you will have to activate WordPress installation by completing the wizard.
 
 Next you will have to install and activate **Woo Commerce** plugin. (via web interface)
 
-Run `composer` to create and update `vendor` folder.
+
 
 Finally, activate Incomaker plugin which is already listed in available plugins.
 

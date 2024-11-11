@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2431d425acfa08f85f442eb23f07224",
+    "content-hash": "e9d6ac7ad3fec43d7b4c8751c168eebd",
     "packages": [
         {
             "name": "incomaker/api",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/incomaker/api.git",
-                "reference": "483d2ad167abfa271bfc772488b8e08683094a3a"
+                "reference": "205e833a632a3547e290007462d9f3195c5e5e55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/incomaker/api/zipball/483d2ad167abfa271bfc772488b8e08683094a3a",
-                "reference": "483d2ad167abfa271bfc772488b8e08683094a3a",
+                "url": "https://api.github.com/repos/incomaker/api/zipball/205e833a632a3547e290007462d9f3195c5e5e55",
+                "reference": "205e833a632a3547e290007462d9f3195c5e5e55",
                 "shasum": ""
             },
             "require": {
@@ -43,9 +43,9 @@
             "description": "Incomaker API library",
             "support": {
                 "issues": "https://github.com/incomaker/api/issues",
-                "source": "https://github.com/incomaker/api/tree/3.2.1"
+                "source": "https://github.com/incomaker/api/tree/3.2.2"
             },
-            "time": "2024-11-08T17:17:51+00:00"
+            "time": "2024-11-11T15:01:23+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",

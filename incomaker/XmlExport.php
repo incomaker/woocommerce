@@ -101,7 +101,7 @@ abstract class XmlExport {
 	}
 
 	protected function addItem($object, $id, $item) {
-		if (isset($item)) {
+		if (isset($item) && !empty($item)) {
 			return $object->addChild($id, htmlspecialchars($item));
 		}
 	}

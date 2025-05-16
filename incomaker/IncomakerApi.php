@@ -44,7 +44,8 @@ class IncomakerApi
 			$event->setClientContactId($customer);
 		}
 		if (!empty($product)) {
-			$event->setRelatedId($product);
+			$productObject = wc_get_product($product);
+			$event->setRelatedId($productObject->get_sku());
 		}
 		if (!empty($session)) {
 			$event->setSessionId($session);

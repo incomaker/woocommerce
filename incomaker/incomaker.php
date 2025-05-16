@@ -140,7 +140,19 @@ class Incomaker
 			register_deactivation_hook(__FILE__, 'incomaker_deactivate');
 			add_action('rest_api_init', array($this, 'register_rest_controller'));
 			add_filter('rest_pre_serve_request', array($this, 'feed_handler'), 10, 4);
+			add_action('woocommerce_before_single_product', array($this,'add_product_sku'), 10);
 		}
+	}
+
+	public function add_product_sku()
+	{
+		global $product;
+		$id = $product->get_sku();
+		echo "
+<script>
+    window.incoFindVariantId = function() {return '$id'}
+    window.incoFindProductId = function() {return '$id'}
+</script>";
 	}
 }
 

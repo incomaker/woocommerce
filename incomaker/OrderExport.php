@@ -20,7 +20,6 @@
 namespace Incomaker;
 
 use SimpleXMLElement;
-use WC_Product;
 
 class OrderExport extends XmlExport {
 
@@ -85,7 +84,8 @@ class OrderExport extends XmlExport {
 		if ($order->get_items() != null) {
 			foreach ($order->get_items() as $itm) {
 				$item = $items->addChild('i');
-				$item->addAttribute("id", $itm->get_product_id() * XmlExport::PRODUCT_ATTRIBUTE + $itm->get_variation_id());
+				$product = wc_get_product($itm->get_product_id());
+				$item->addAttribute("id", $product->get_sku());
 				$this->addItem($item, "quantity", $itm->get_quantity());
 				$item_actual_qty = empty($itm->get_quantity()) ? 1 : $itm->get_quantity();
 				$unit_price_without_tax = $itm->get_total() / $item_actual_qty;

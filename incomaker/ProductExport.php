@@ -44,8 +44,8 @@ class ProductExport extends XmlExport
 
 	protected function createXml($product) {
 		$childXml = $this->xml->addChild('p');
-		$childXml->addAttribute("id", $product->get_id() * XmlExport::PRODUCT_ATTRIBUTE);
-		$this->addItem($childXml, 'productId', $product->get_id());
+		$childXml->addAttribute("id", $product->get_sku());
+		$this->addItem($childXml, 'productId', $product->get_sku());
 		$imageUrl = wp_get_attachment_image_url($product->get_image_id(), 'full');
 		if (!empty($imageUrl)) {
 			$this->addItem($childXml, 'imageUrl', $imageUrl);

@@ -65,32 +65,33 @@ class Incomaker
 		$info = get_plugin_data(__FILE__);
 
 		?>
-			<div class="error notice">
-				<p>
-					<?php
-						printf(
-							esc_html__('The minimum required PHP version is %s. Your current version is %s.', 'incomaker' ),
-							esc_html(INCOMAKER_MIN_PHP_VERSION),
-							esc_html(PHP_VERSION)
-						);
-					?>
-				</p>
-				<p>
-					<?php esc_html_e('Please, update your PHP (or contact you hosting to do so).', 'incomaker'); ?>
-				</p>
-			</div>
+        <div class="error notice">
+            <p>
+				<?php
+				printf(
+					esc_html__('The minimum required PHP version is %s. Your current version is %s.', 'incomaker'),
+					esc_html(INCOMAKER_MIN_PHP_VERSION),
+					esc_html(PHP_VERSION)
+				);
+				?>
+            </p>
+            <p>
+				<?php esc_html_e('Please, update your PHP (or contact you hosting to do so).', 'incomaker'); ?>
+            </p>
+        </div>
 		<?php
 	}
 
-	public function api_key_not_set() {
+	public function api_key_not_set()
+	{
 		$settings_url = admin_url('admin.php?page=incomaker');
 		?>
-			<div class="notice error">
-				<p>
-					<?php esc_html_e("Incomaker API key is not set! Plugin will not work. You can set the API key on ", 'incomaker');?>
-					<a href="<?=$settings_url?>">Settings page</a>.
-				</p>
-			</div>
+        <div class="notice error">
+            <p>
+				<?php esc_html_e("Incomaker API key is not set! Plugin will not work. You can set the API key on ", 'incomaker'); ?>
+                <a href="<?= $settings_url ?>">Settings page</a>.
+            </p>
+        </div>
 		<?php
 	}
 
@@ -115,7 +116,8 @@ class Incomaker
 		return true;
 	}
 
-	public static function woocommerce_plugin_active() {
+	public static function woocommerce_plugin_active()
+	{
 		return is_plugin_active('woocommerce/woocommerce.php');
 	}
 
@@ -141,7 +143,19 @@ class Incomaker
 			register_deactivation_hook(__FILE__, 'incomaker_deactivate');
 			add_action('rest_api_init', array($this, 'register_rest_controller'));
 			add_filter('rest_pre_serve_request', array($this, 'feed_handler'), 10, 4);
+			add_action('woocommerce_before_single_product', array($this,'add_product_sku'), 10);
 		}
+	}
+
+	public function add_product_sku()
+	{
+		global $product;
+		$id = $product->get_sku();
+		echo "
+<script>
+    window.incoFindVariantId = function() {return '$id'}
+    window.incoFindProductId = function() {return '$id'}
+</script>";
 	}
 }
 

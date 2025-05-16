@@ -48,8 +48,12 @@ class CategoryExport extends XmlExport
     protected function createXml($category)
     {
         $childXml = $this->xml->addChild('c');
-        $childXml->addAttribute("id", $category->term_id);
+        $childXml->addAttribute("id", $category->name);
         $this->addItem($childXml, 'parentCategoryId', $category->parent);
+        if($category->parent > 0) {
+            $parentCategory = get_term($category->parent, 'product_cat');
+            $this->addItem($childXml, 'parentCategoryName', $parentCategory->name);
+        }
         $languagesXml = $childXml->addChild('languages');
         $lXml = $languagesXml->addChild('l');
         $lXml->addAttribute("id", $this->shortLang($this->locale));
